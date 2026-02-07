@@ -32,8 +32,10 @@ class Category extends Model
 
     public function getImageUrlAttribute()
     {
-        $img = $this->image;
-        return uri('categories/' . $img);
+        if (isset($this->image)) {
+           $img = $this->image;
+            return asset('storage/' . $img);
+        }
     }
 
     public function scopeSearch($query, $search)

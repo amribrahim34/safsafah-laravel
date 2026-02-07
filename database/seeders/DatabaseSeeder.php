@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             ActiveIngredientSeeder::class,
             PointsConfigSeeder::class,
             UserSeeder::class,
+            AdminSeeder::class,
         ]);
     }
 }
