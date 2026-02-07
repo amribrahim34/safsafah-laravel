@@ -8,14 +8,22 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::prefix('admin')->group(function () {
-    Route::apiResource('active-ingredients', \App\Http\Controllers\Admin\ActiveIngrediantController::class);
-    Route::apiResource('categories', \App\Http\Controllers\Admin\CategoryController::class);
-    Route::apiResource('promo-codes', \App\Http\Controllers\Admin\PromoCodeController::class);
-    Route::apiResource('products', \App\Http\Controllers\Admin\ProductController::class);
-    Route::apiResource('contact-messages', \App\Http\Controllers\Admin\ContactMessageController::class);
-    Route::apiResource('brands', \App\Http\Controllers\Admin\BrandController::class);
-    Route::apiResource('skin-types', \App\Http\Controllers\Admin\SkinTypesController::class);
-    Route::apiResource('skin-concerns', \App\Http\Controllers\Admin\SkinConcernController::class);
-    Route::apiResource('beauty-profiles', \App\Http\Controllers\Admin\BeautyProfileController::class);
-    Route::apiResource('orders', \App\Http\Controllers\Admin\OrderController::class);
+    // Auth Routes
+    Route::post('login', [\App\Http\Controllers\Admin\AuthController::class, 'login']);
+
+    Route::middleware(['auth:sanctum', 'is_admin'])->group(function () {
+        Route::post('logout', [\App\Http\Controllers\Admin\AuthController::class, 'logout']);
+        Route::get('me', [\App\Http\Controllers\Admin\AuthController::class, 'me']);
+
+        Route::apiResource('active-ingredients', \App\Http\Controllers\Admin\ActiveIngrediantController::class);
+        Route::apiResource('categories', \App\Http\Controllers\Admin\CategoryController::class);
+        Route::apiResource('promo-codes', \App\Http\Controllers\Admin\PromoCodeController::class);
+        Route::apiResource('products', \App\Http\Controllers\Admin\ProductController::class);
+        Route::apiResource('contact-messages', \App\Http\Controllers\Admin\ContactMessageController::class);
+        Route::apiResource('brands', \App\Http\Controllers\Admin\BrandController::class);
+        Route::apiResource('skin-types', \App\Http\Controllers\Admin\SkinTypesController::class);
+        Route::apiResource('skin-concerns', \App\Http\Controllers\Admin\SkinConcernController::class);
+        Route::apiResource('beauty-profiles', \App\Http\Controllers\Admin\BeautyProfileController::class);
+        Route::apiResource('orders', \App\Http\Controllers\Admin\OrderController::class);
+    });
 });
