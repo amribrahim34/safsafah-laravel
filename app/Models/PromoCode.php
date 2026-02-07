@@ -40,4 +40,11 @@ class PromoCode extends Model
             ->withPivot('discount_amount')
             ->withTimestamps();
     }
+
+    public function scopeSearch($query, $search)
+    {
+        return $query->when($search, function ($q) use ($search) {
+             $q->where('code', 'like', "%{$search}%");
+        });
+    }
 }

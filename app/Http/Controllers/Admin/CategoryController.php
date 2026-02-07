@@ -4,9 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Services\Admin\CategoryService;
 
 class CategoryController extends Controller
 {
+    public function __construct(private CategoryService $categoryService)
+    {
+        
+    }
     /**
      * Display a listing of the resource.
      */

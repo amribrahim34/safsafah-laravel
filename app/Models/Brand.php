@@ -16,4 +16,14 @@ class Brand extends Model
     {
         return $this->hasMany(Product::class);
     }
+
+    public function scopeSearch($query, $search)
+    {
+        return $query->when($search, function ($q) use ($search) {
+            $q->where(function ($q) use ($search) {
+                $q->where('name_ar', 'like', "%{$search}%")
+                  ->orWhere('name_en', 'like', "%{$search}%");
+            });
+        });
+    }
 }

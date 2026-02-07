@@ -27,4 +27,27 @@ class Category extends Model
     {
         return $this->hasMany(Product::class);
     }
+
+    public function getImageUrlAttribute()
+    {
+        $img = $this->image;
+        return uri('categories/' . $img);
+    }
+
+    public function scopeSearch($query, $search)
+    {
+        return $query->when($search, function ($q) use ($search) {
+            $q->where(function ($q) use ($search) {
+                $q->where('name_ar', 'like', "%{$search}%")
+                  ->orWhere('name_en', 'like', "%{$search}%");
+            });
+        });
+    }
+
+    public function scopeParent($query, $parentId)
+    {
+        return $query->when($parentId, function ($q) use ($parentId) {
+            $q->where('parent_id', $parentId);
+        });
+    }
 }

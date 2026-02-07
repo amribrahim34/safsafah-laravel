@@ -49,4 +49,15 @@ class Order extends Model
             ->withPivot('discount_amount')
             ->withTimestamps();
     }
+
+    public function scopeSearch($query, $search)
+    {
+        return $query->when($search, function ($q) use ($search) {
+             $q->where('id', 'like', "%{$search}%")
+               ->orWhereHas('user', function($q) use ($search){
+                    $q->where('name', 'like', "%{$search}%")
+                      ->orWhere('mobile', 'like', "%{$search}%");
+               });
+        });
+    }
 }
