@@ -11,7 +11,7 @@ class GetOrdersRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,8 @@ class GetOrdersRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'search' => 'nullable|string|max:255',
+            'status' => 'nullable|string|max:255',
         ];
     }
 }

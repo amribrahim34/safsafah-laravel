@@ -3,32 +3,34 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Services\Admin\SkinConcernService;
+use App\Http\Requests\Admin\GetSkinConcernsRequest;
+use App\Http\Requests\Admin\StoreSkinConcernRequest;
+use App\Http\Requests\Admin\UpdateSkinConcernRequest;
+use App\Http\Resources\Admin\SkinConcernResource;
 
 class SkinConcernController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function __construct(private SkinConcernService $skinConcernService)
     {
-        //
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Display a listing of the resource.
      */
-    public function create()
+    public function index(GetSkinConcernsRequest $request)
     {
-        //
+        $skinConcerns = $this->skinConcernService->getAllSkinConcernsPagenated($request->search);
+        return SkinConcernResource::collection($skinConcerns);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreSkinConcernRequest $request)
     {
-        //
+        $skinConcern = $this->skinConcernService->createSkinConcern($request->validated());
+        return new SkinConcernResource($skinConcern);
     }
 
     /**
@@ -36,23 +38,17 @@ class SkinConcernController extends Controller
      */
     public function show(string $id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
+        $skinConcern = $this->skinConcernService->getSkinConcernById($id);
+        return new SkinConcernResource($skinConcern);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateSkinConcernRequest $request, string $id)
     {
-        //
+        $skinConcern = $this->skinConcernService->updateSkinConcern($id, $request->validated());
+        return new SkinConcernResource($skinConcern);
     }
 
     /**
@@ -60,6 +56,7 @@ class SkinConcernController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $this->skinConcernService->deleteSkinConcern($id);
+        return response()->noContent();
     }
 }

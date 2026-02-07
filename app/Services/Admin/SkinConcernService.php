@@ -23,6 +23,11 @@ class SkinConcernService
         return SkinConcern::create($data);
     }
 
+    public function getSkinConcernById($id)
+    {
+        return SkinConcern::findOrFail($id);
+    }
+
     public function updateSkinConcern($id, $data)
     {
         $skinConcern = SkinConcern::findOrFail($id);

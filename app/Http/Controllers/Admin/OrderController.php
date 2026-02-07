@@ -3,32 +3,24 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Services\Admin\OrderService;
+use App\Http\Requests\Admin\GetOrdersRequest;
+use App\Http\Requests\Admin\UpdateOrderRequest;
+use App\Http\Resources\Admin\OrderResource;
 
 class OrderController extends Controller
 {
+    public function __construct(private OrderService $orderService)
+    {
+    }
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(GetOrdersRequest $request)
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
+        $orders = $this->orderService->getAllOrdersPagenated($request->search, $request->status);
+        return OrderResource::collection($orders);
     }
 
     /**
@@ -36,30 +28,16 @@ class OrderController extends Controller
      */
     public function show(string $id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
+        $order = $this->orderService->getOrder($id);
+        return new OrderResource($order);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateOrderRequest $request, string $id)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $order = $this->orderService->updateOrderStatus($id, $request->status);
+        return new OrderResource($order);
     }
 }

@@ -22,7 +22,8 @@ class GetCategoriesRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'parent_id' => 'nullable|exists:categories,id',
+            'search' => 'nullable|string|max:255',
         ];
     }
 }

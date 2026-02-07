@@ -11,7 +11,7 @@ class StoreSkinConcernRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,8 @@ class StoreSkinConcernRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name_ar' => 'required|string|max:255',
+            'name_en' => 'required|string|max:255',
         ];
     }
 }

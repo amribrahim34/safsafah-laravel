@@ -23,6 +23,11 @@ class SkinTypeService
         return SkinType::create($data);
     }
 
+    public function getSkinTypeById($id)
+    {
+        return SkinType::findOrFail($id);
+    }
+
     public function updateSkinType($id, $data)
     {
         $skinType = SkinType::findOrFail($id);

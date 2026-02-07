@@ -26,6 +26,15 @@ class CategoryController extends Controller
     }
 
     /**
+     * Get all categories for select dropdown (unpaginated).
+     */
+    public function select(GetCategoriesRequest $request)
+    {
+        $categories = $this->categoryService->getCategoriesForSelect($request->parent_id);
+        return CategoryResource::collection($categories);
+    }
+
+    /**
      * Store a newly created resource in storage.
      */
     public function store(StoreCategoryRequest $request)

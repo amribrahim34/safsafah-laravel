@@ -42,6 +42,11 @@ class BrandService
         return $brand;
     }
 
+    public function getBrandById($id)
+    {
+        return Brand::findOrFail($id);
+    }
+
     public function deleteBrand($id)
     {
         $brand = Brand::findOrFail($id);
