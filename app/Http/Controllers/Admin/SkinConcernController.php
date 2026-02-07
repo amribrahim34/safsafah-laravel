@@ -25,6 +25,15 @@ class SkinConcernController extends Controller
     }
 
     /**
+     * Get all skin concerns for select dropdown (unpaginated).
+     */
+    public function select()
+    {
+        $skinConcerns = $this->skinConcernService->getAllSkinConcernsForSelect();
+        return SkinConcernResource::collection($skinConcerns);
+    }
+
+    /**
      * Store a newly created resource in storage.
      */
     public function store(StoreSkinConcernRequest $request)

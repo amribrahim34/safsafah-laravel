@@ -26,7 +26,7 @@ class ProductResource extends JsonResource
             'category' => new CategoryResource($this->whenLoaded('category')), // Assuming CategoryResource exists
             'brand_id' => $this->brand_id,
             'brand' => $this->whenLoaded('brand'), // Or BrandResource if exists
-            'image_url' => $this->image ? asset('storage/' . $this->image) : null,
+            'image_url' => $this->image_url, // Using the accessor for image URL
             'active_ingredients' => ActiveIngrediantResource::collection($this->whenLoaded('activeIngredients')),
             'skin_types' => $this->whenLoaded('skinTypes'), // Or SkinTypeResource
             'skin_concerns' => $this->whenLoaded('skinConcerns'), // Or SkinConcernResource

@@ -25,6 +25,15 @@ class SkinTypesController extends Controller
     }
 
     /**
+     * Get all skin types for select dropdown (unpaginated).
+     */
+    public function select()
+    {
+        $skinTypes = $this->skinTypeService->getAllSkinTypesForSelect();
+        return SkinTypesResource::collection($skinTypes);
+    }
+
+    /**
      * Store a newly created resource in storage.
      */
     public function store(StoreSkinTypesRequest $request)

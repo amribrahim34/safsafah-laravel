@@ -25,6 +25,15 @@ class ActiveIngrediantController extends Controller
     }
 
     /**
+     * Get all active ingredients for select dropdown (unpaginated).
+     */
+    public function select()
+    {
+        $ingredients = $this->service->getAllActiveIngredientsForSelect();
+        return ActiveIngrediantResource::collection($ingredients);
+    }
+
+    /**
      * Store a newly created resource in storage.
      */
     public function store(StoreActiveIngrediantRequest $request)
