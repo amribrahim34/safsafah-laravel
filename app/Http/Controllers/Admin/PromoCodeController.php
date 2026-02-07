@@ -3,32 +3,34 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Services\Admin\PromoCodeService;
+use App\Http\Requests\Admin\GetPromoCodesRequest;
+use App\Http\Requests\Admin\StorePromoCodeRequest;
+use App\Http\Requests\Admin\UpdatePromoCodeRequest;
+use App\Http\Resources\Admin\PromoCodeResource;
 
 class PromoCodeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function __construct(protected PromoCodeService $service)
     {
-        //
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Display a listing of the resource.
      */
-    public function create()
+    public function index(GetPromoCodesRequest $request)
     {
-        //
+        $promoCodes = $this->service->getAllPromoCodesPaginated($request->search);
+        return PromoCodeResource::collection($promoCodes);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StorePromoCodeRequest $request)
     {
-        //
+        $promoCode = $this->service->createPromoCode($request->validated());
+        return new PromoCodeResource($promoCode);
     }
 
     /**
@@ -36,23 +38,17 @@ class PromoCodeController extends Controller
      */
     public function show(string $id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
+        $promoCode = $this->service->getPromoCodeById($id);
+        return new PromoCodeResource($promoCode);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdatePromoCodeRequest $request, string $id)
     {
-        //
+        $promoCode = $this->service->updatePromoCode($id, $request->validated());
+        return new PromoCodeResource($promoCode);
     }
 
     /**
@@ -60,6 +56,7 @@ class PromoCodeController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $this->service->deletePromoCode($id);
+        return response()->noContent();
     }
 }

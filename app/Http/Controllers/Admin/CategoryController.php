@@ -3,37 +3,35 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+// use Illuminate\Http\Request; // Not needed as we use specific requests
 use App\Services\Admin\CategoryService;
+use App\Http\Requests\Admin\GetCategoriesRequest;
+use App\Http\Requests\Admin\StoreCategoryRequest;
+use App\Http\Requests\Admin\UpdateCategoryRequest;
+use App\Http\Resources\Admin\CategoryResource;
 
 class CategoryController extends Controller
 {
     public function __construct(private CategoryService $categoryService)
     {
-        
-    }
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Display a listing of the resource.
      */
-    public function create()
+    public function index(GetCategoriesRequest $request)
     {
-        //
+        $categories = $this->categoryService->getAllCategoriesPaginated($request->parent_id, $request->search);
+        return CategoryResource::collection($categories);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreCategoryRequest $request)
     {
-        //
+        $category = $this->categoryService->makeCategory($request->validated());
+        return new CategoryResource($category);
     }
 
     /**
@@ -41,23 +39,17 @@ class CategoryController extends Controller
      */
     public function show(string $id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
+        $category = $this->categoryService->getCategoryById($id);
+        return new CategoryResource($category);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateCategoryRequest $request, string $id)
     {
-        //
+        $category = $this->categoryService->updateCategory($id, $request->validated());
+        return new CategoryResource($category);
     }
 
     /**
@@ -65,6 +57,7 @@ class CategoryController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $this->categoryService->deleteCategory($id);
+        return response()->noContent();
     }
 }

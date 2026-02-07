@@ -12,7 +12,7 @@ class ProductService
     {
     }
 
-    public function getAllProductsPagenated($search = null, $category_id = null, $brand_id = null)
+    public function getAllProductsPaginated($search = null, $category_id = null, $brand_id = null)
     {
         return Product::query()
             ->search($search)
@@ -21,6 +21,11 @@ class ProductService
             ->with(['category', 'brand' , 'activeIngredients' , 'skinTypes' , 'skinConcerns'])
             ->latest()
             ->paginate(10);
+    }
+
+    public function getProductById($id)
+    {
+        return Product::with(['category', 'brand' , 'activeIngredients' , 'skinTypes' , 'skinConcerns'])->findOrFail($id);
     }
 
     public function createProduct($data)

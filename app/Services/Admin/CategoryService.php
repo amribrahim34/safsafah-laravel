@@ -13,7 +13,7 @@ class CategoryService
         
     }
     
-   public function getAllCategorisPagenated($parent_id = null, $search = null)
+   public function getAllCategoriesPaginated($parent_id = null, $search = null)
    {
        return Category::query()
            ->parent($parent_id)
@@ -61,4 +61,9 @@ class CategoryService
         }
         return $category->delete();
    }
+
+    public function getCategoryById($id)
+    {
+        return Category::findOrFail($id);
+    }
 }

@@ -6,11 +6,16 @@ use App\Models\PromoCode;
 
 class PromoCodeService
 {
-    public function getAllPromoCodesPagenated($search = null)
+    public function getAllPromoCodesPaginated($search = null)
     {
         return PromoCode::query()
             ->search($search)
             ->paginate(10);
+    }
+
+    public function getPromoCodeById($id)
+    {
+        return PromoCode::findOrFail($id);
     }
 
     public function createPromoCode($data)

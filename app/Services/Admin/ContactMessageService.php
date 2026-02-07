@@ -7,11 +7,16 @@ use Illuminate\Support\Facades\Storage;
 
 class ContactMessageService
 {
-    public function getAllContactMessagesPagenated($search = null)
+    public function getAllContactMessagesPaginated($search = null)
     {
         return ContactMessages::query()
             ->search($search)
             ->paginate(10);
+    }
+
+    public function getContactMessageById($id)
+    {
+        return ContactMessages::findOrFail($id);
     }
 
     public function deleteContactMessage($id)

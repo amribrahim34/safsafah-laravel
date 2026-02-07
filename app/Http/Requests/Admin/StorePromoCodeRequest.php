@@ -11,7 +11,7 @@ class StorePromoCodeRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,14 @@ class StorePromoCodeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'code' => 'required|string|unique:promo_codes',
+            'discount' => 'required|numeric',
+            'is_percent' => 'boolean',
+            'expiry_date' => 'nullable|date',
+            'usage_limit' => 'nullable|integer',
+            'active' => 'boolean',
+            'min_order_value' => 'nullable|numeric',
+            'max_discount_amount' => 'nullable|numeric',
         ];
     }
 }

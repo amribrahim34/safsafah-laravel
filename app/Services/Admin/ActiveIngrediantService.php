@@ -35,4 +35,9 @@ class ActiveIngrediantService
         $activeIngredient = ActiveIngredient::findOrFail($id);
         return $activeIngredient->delete();
     }
+
+    public function getActiveIngredientById($id)
+    {
+        return ActiveIngredient::findOrFail($id);
+    }
 }
