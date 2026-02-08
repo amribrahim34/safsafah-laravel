@@ -1,16 +1,18 @@
 <?php
 
 use App\Models\ContactMessages;
-use App\Models\User;
+use App\Models\Admin;
+use Laravel\Sanctum\Sanctum;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
 
 test('can list contact messages', function () {
-    $user = User::factory()->create();
+    $admin = Admin::factory()->create();
     ContactMessages::factory()->count(3)->create();
 
-    $response = $this->actingAs($user)->getJson('/api/admin/contact-messages');
+    Sanctum::actingAs($admin, ['*']);
+    $response = $this->getJson('/api/admin/contact-messages');
 
     $response->assertStatus(200)
         ->assertJsonStructure([
@@ -23,10 +25,11 @@ test('can list contact messages', function () {
 });
 
 test('can show contact message', function () {
-    $user = User::factory()->create();
+    $admin = Admin::factory()->create();
     $message = ContactMessages::factory()->create();
 
-    $response = $this->actingAs($user)->getJson("/api/admin/contact-messages/{$message->id}");
+    Sanctum::actingAs($admin, ['*']);
+    $response = $this->getJson("/api/admin/contact-messages/{$message->id}");
 
     $response->assertStatus(200)
         ->assertJsonFragment([
@@ -36,10 +39,11 @@ test('can show contact message', function () {
 });
 
 test('can delete contact message', function () {
-    $user = User::factory()->create();
+    $admin = Admin::factory()->create();
     $message = ContactMessages::factory()->create();
 
-    $response = $this->actingAs($user)->deleteJson("/api/admin/contact-messages/{$message->id}");
+    Sanctum::actingAs($admin, ['*']);
+    $response = $this->deleteJson("/api/admin/contact-messages/{$message->id}");
 
     $response->assertStatus(204);
 

@@ -1,16 +1,18 @@
 <?php
 
 use App\Models\PromoCode;
-use App\Models\User;
+use App\Models\Admin;
+use Laravel\Sanctum\Sanctum;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
 
 test('can list promo codes', function () {
-    $user = User::factory()->create();
+    $admin = Admin::factory()->create();
     PromoCode::factory()->count(3)->create();
 
-    $response = $this->actingAs($user)->getJson('/api/admin/promo-codes');
+    Sanctum::actingAs($admin, ['*']);
+    $response = $this->getJson('/api/admin/promo-codes');
 
     $response->assertStatus(200)
         ->assertJsonStructure([
@@ -23,7 +25,7 @@ test('can list promo codes', function () {
 });
 
 test('can create promo code', function () {
-    $user = User::factory()->create();
+    $admin = Admin::factory()->create();
     $data = [
         'code' => 'NEWPROMO2025',
         'discount' => 10.5,
@@ -31,7 +33,8 @@ test('can create promo code', function () {
         'active' => true
     ];
 
-    $response = $this->actingAs($user)->postJson('/api/admin/promo-codes', $data);
+    Sanctum::actingAs($admin, ['*']);
+    $response = $this->postJson('/api/admin/promo-codes', $data);
 
     $response->assertStatus(201)
         ->assertJsonFragment(['code' => 'NEWPROMO2025']);
@@ -40,10 +43,11 @@ test('can create promo code', function () {
 });
 
 test('can show promo code', function () {
-    $user = User::factory()->create();
+    $admin = Admin::factory()->create();
     $promoCode = PromoCode::factory()->create();
 
-    $response = $this->actingAs($user)->getJson("/api/admin/promo-codes/{$promoCode->id}");
+    Sanctum::actingAs($admin, ['*']);
+    $response = $this->getJson("/api/admin/promo-codes/{$promoCode->id}");
 
     $response->assertStatus(200)
         ->assertJsonFragment([
@@ -53,7 +57,7 @@ test('can show promo code', function () {
 });
 
 test('can update promo code', function () {
-    $user = User::factory()->create();
+    $admin = Admin::factory()->create();
     $promoCode = PromoCode::factory()->create();
 
     $data = [
@@ -63,7 +67,8 @@ test('can update promo code', function () {
         'active' => true
     ];
 
-    $response = $this->actingAs($user)->putJson("/api/admin/promo-codes/{$promoCode->id}", $data);
+    Sanctum::actingAs($admin, ['*']);
+    $response = $this->putJson("/api/admin/promo-codes/{$promoCode->id}", $data);
 
     $response->assertStatus(200)
         ->assertJsonFragment(['code' => 'UPDATEDPROMO']);
@@ -72,10 +77,11 @@ test('can update promo code', function () {
 });
 
 test('can delete promo code', function () {
-    $user = User::factory()->create();
+    $admin = Admin::factory()->create();
     $promoCode = PromoCode::factory()->create();
 
-    $response = $this->actingAs($user)->deleteJson("/api/admin/promo-codes/{$promoCode->id}");
+    Sanctum::actingAs($admin, ['*']);
+    $response = $this->deleteJson("/api/admin/promo-codes/{$promoCode->id}");
 
     $response->assertStatus(204);
 

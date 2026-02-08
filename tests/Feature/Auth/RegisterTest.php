@@ -13,10 +13,18 @@ test('user can register with valid data', function () {
         'mobile' => '1234567890',
     ]);
 
-    $response->assertStatus(404);
-    // Future assertion:
-    // $response->assertCreated();
-    // $this->assertDatabaseHas('users', ['email' => 'new@example.com']);
+    $response->assertSuccessful()
+        ->assertJsonStructure([
+            'token',
+            'user' => [
+                'id',
+                'name',
+                'email',
+                'mobile',
+                'points',
+            ]
+        ]);
+    $this->assertDatabaseHas('users', ['email' => 'new@example.com']);
 });
 
 test('register fails with missing fields', function () {
@@ -24,7 +32,7 @@ test('register fails with missing fields', function () {
         'name' => 'Test User',
     ]);
 
-    $response->assertStatus(404);
+    $response->assertStatus(422);
     // Future assertion:
     // $response->assertStatus(422);
 });

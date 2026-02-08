@@ -16,13 +16,17 @@ test('user can login with valid credentials', function () {
         'password' => 'password',
     ]);
 
-    // Expecting 404 because controller doesn't exist yet, but asserting structure for when it does
-    // $response->assertOk()
-    //     ->assertJsonStructure(['token', 'user']);
-    // For now, assertion depends on what we expect. Since user tasked to write tests for existing postman,
-    // and code doesn't exist, we expect 404.
-    
-    $response->assertStatus(404);
+    $response->assertOk()
+        ->assertJsonStructure([
+            'token',
+            'user' => [
+                'id',
+                'name',
+                'email',
+                'mobile',
+                'points',
+            ]
+        ]);
 });
 
 test('user cannot login with invalid credentials', function () {
@@ -36,7 +40,7 @@ test('user cannot login with invalid credentials', function () {
         'password' => 'wrong-password',
     ]);
 
-    $response->assertStatus(404);
+    $response->assertStatus(401);
     // Future assertion:
     // $response->assertStatus(422)
     //     ->assertJsonValidationErrors(['email']); 

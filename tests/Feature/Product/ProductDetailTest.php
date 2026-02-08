@@ -10,10 +10,16 @@ test('can fetch single product', function () {
 
     $response = getJson("/api/products/{$product->id}");
 
-    $response->assertStatus(404);
-    // Future assertion:
-    // $response->assertOk()
-    //     ->assertJson(['id' => $product->id]);
+    $response->assertOk()
+        ->assertJsonStructure([
+            'data' => [
+                'id',
+                'nameEn',
+                'price',
+                'image',
+                'descriptionEn',
+            ]
+        ]);
 });
 
 test('fetch non-existent product returns 404', function () {

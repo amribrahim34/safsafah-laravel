@@ -1,16 +1,18 @@
 <?php
 
 use App\Models\ActiveIngredient;
-use App\Models\User;
+use App\Models\Admin;
+use Laravel\Sanctum\Sanctum;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
 
 test('can list active ingredients', function () {
-    $user = User::factory()->create();
+    $admin = Admin::factory()->create();
     ActiveIngredient::factory()->count(3)->create();
 
-    $response = $this->actingAs($user)->getJson('/api/admin/active-ingredients');
+    Sanctum::actingAs($admin, ['*']);
+    $response = $this->getJson('/api/admin/active-ingredients');
 
     $response->assertStatus(200)
         ->assertJsonStructure([
@@ -23,13 +25,14 @@ test('can list active ingredients', function () {
 });
 
 test('can create active ingredient', function () {
-    $user = User::factory()->create();
+    $admin = Admin::factory()->create();
     $data = [
         'name_ar' => 'Test AR',
         'name_en' => 'Test EN',
     ];
 
-    $response = $this->actingAs($user)->postJson('/api/admin/active-ingredients', $data);
+    Sanctum::actingAs($admin, ['*']);
+    $response = $this->postJson('/api/admin/active-ingredients', $data);
 
     $response->assertStatus(201)
         ->assertJsonFragment($data);
@@ -38,10 +41,11 @@ test('can create active ingredient', function () {
 });
 
 test('can show active ingredient', function () {
-    $user = User::factory()->create();
+    $admin = Admin::factory()->create();
     $ingredient = ActiveIngredient::factory()->create();
 
-    $response = $this->actingAs($user)->getJson("/api/admin/active-ingredients/{$ingredient->id}");
+    Sanctum::actingAs($admin, ['*']);
+    $response = $this->getJson("/api/admin/active-ingredients/{$ingredient->id}");
 
     $response->assertStatus(200)
         ->assertJsonFragment([
@@ -52,7 +56,7 @@ test('can show active ingredient', function () {
 });
 
 test('can update active ingredient', function () {
-    $user = User::factory()->create();
+    $admin = Admin::factory()->create();
     $ingredient = ActiveIngredient::factory()->create();
 
     $data = [
@@ -60,7 +64,8 @@ test('can update active ingredient', function () {
         'name_en' => 'Updated EN',
     ];
 
-    $response = $this->actingAs($user)->putJson("/api/admin/active-ingredients/{$ingredient->id}", $data);
+    Sanctum::actingAs($admin, ['*']);
+    $response = $this->putJson("/api/admin/active-ingredients/{$ingredient->id}", $data);
 
     $response->assertStatus(200)
         ->assertJsonFragment($data);
@@ -69,10 +74,11 @@ test('can update active ingredient', function () {
 });
 
 test('can delete active ingredient', function () {
-    $user = User::factory()->create();
+    $admin = Admin::factory()->create();
     $ingredient = ActiveIngredient::factory()->create();
 
-    $response = $this->actingAs($user)->deleteJson("/api/admin/active-ingredients/{$ingredient->id}");
+    Sanctum::actingAs($admin, ['*']);
+    $response = $this->deleteJson("/api/admin/active-ingredients/{$ingredient->id}");
 
     $response->assertStatus(204);
 

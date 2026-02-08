@@ -10,21 +10,41 @@ uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 
 test('user can create an order', function () {
     $user = User::factory()->create();
-    $address = Address::factory()->create(['user_id' => $user->id]);
+    $cart = \App\Models\Cart::factory()->create(['user_id' => $user->id]);
+    \App\Models\CartItem::factory()->create(['cart_id' => $cart->id]);
 
-    $response = postJson('/api/orders', [
-        'address_id' => $address->id,
-        'payment_method' => 'card',
+    $response = $this->actingAs($user)->postJson('/api/orders', [
+        'customerName' => 'Test User',
+        'customerAddress' => '123 Test St',
+        'customerMobile' => '01010101010',
+        'paymentType' => 'CASH_ON_DELIVERY',
     ]);
 
-    $response->assertStatus(404);
+    $response->assertCreated()
+        ->assertJsonStructure([
+            'data' => [
+                'id',
+                'total',
+                'status',
+                'items',
+            ]
+        ]);
 });
 
 test('user can list paginated orders', function () {
     $user = User::factory()->create();
     Order::factory()->count(3)->create(['user_id' => $user->id]);
 
-    $response = getJson('/api/orders/paginated?page=0&size=2&status=PENDING');
+    $response = $this->actingAs($user)->getJson('/api/orders/paginated?page=0&size=2&status=PENDING');
 
-    $response->assertStatus(404);
+    $response->assertOk()
+        ->assertJsonStructure([
+            'data' => [
+                '*' => [
+                    'id',
+                    'total',
+                    'status',
+                ]
+            ]
+        ]);
 });

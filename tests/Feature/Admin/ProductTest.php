@@ -1,7 +1,8 @@
 <?php
 
 use App\Models\Product;
-use App\Models\User;
+use App\Models\Admin;
+use Laravel\Sanctum\Sanctum;
 use App\Models\Category;
 use App\Models\Brand;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -9,7 +10,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 uses(RefreshDatabase::class);
 
 test('can list products', function () {
-    $user = User::factory()->create();
+    $admin = Admin::factory()->create();
     // Ensure factories exist for relations
     $category = Category::factory()->create();
     $brand = Brand::factory()->create();
@@ -19,7 +20,8 @@ test('can list products', function () {
         'brand_id' => $brand->id
     ]);
 
-    $response = $this->actingAs($user)->getJson('/api/admin/products');
+    Sanctum::actingAs($admin, ['*']);
+    $response = $this->getJson('/api/admin/products');
 
     $response->assertStatus(200)
         ->assertJsonStructure([
@@ -32,7 +34,7 @@ test('can list products', function () {
 });
 
 test('can create product', function () {
-    $user = User::factory()->create();
+    $admin = Admin::factory()->create();
     $category = Category::factory()->create();
     $brand = Brand::factory()->create();
 
@@ -47,7 +49,8 @@ test('can create product', function () {
         'description_en' => 'Desc EN',
     ];
 
-    $response = $this->actingAs($user)->postJson('/api/admin/products', $data);
+    Sanctum::actingAs($admin, ['*']);
+    $response = $this->postJson('/api/admin/products', $data);
 
     $response->assertStatus(201)
         ->assertJsonFragment(['name_en' => 'Test Product EN']);
@@ -56,7 +59,7 @@ test('can create product', function () {
 });
 
 test('can show product', function () {
-    $user = User::factory()->create();
+    $admin = Admin::factory()->create();
     $category = Category::factory()->create();
     $brand = Brand::factory()->create();
     
@@ -65,7 +68,8 @@ test('can show product', function () {
         'brand_id' => $brand->id
     ]);
 
-    $response = $this->actingAs($user)->getJson("/api/admin/products/{$product->id}");
+    Sanctum::actingAs($admin, ['*']);
+    $response = $this->getJson("/api/admin/products/{$product->id}");
 
     $response->assertStatus(200)
         ->assertJsonFragment([
@@ -75,7 +79,7 @@ test('can show product', function () {
 });
 
 test('can update product', function () {
-    $user = User::factory()->create();
+    $admin = Admin::factory()->create();
     $category = Category::factory()->create();
     $brand = Brand::factory()->create();
     
@@ -92,7 +96,8 @@ test('can update product', function () {
         'brand_id' => $brand->id,
     ];
 
-    $response = $this->actingAs($user)->putJson("/api/admin/products/{$product->id}", $data);
+    Sanctum::actingAs($admin, ['*']);
+    $response = $this->putJson("/api/admin/products/{$product->id}", $data);
 
     $response->assertStatus(200)
         ->assertJsonFragment(['name_en' => 'Updated Product EN']);
@@ -101,7 +106,7 @@ test('can update product', function () {
 });
 
 test('can delete product', function () {
-    $user = User::factory()->create();
+    $admin = Admin::factory()->create();
     $category = Category::factory()->create();
     $brand = Brand::factory()->create();
     
@@ -110,7 +115,8 @@ test('can delete product', function () {
         'brand_id' => $brand->id
     ]);
 
-    $response = $this->actingAs($user)->deleteJson("/api/admin/products/{$product->id}");
+    Sanctum::actingAs($admin, ['*']);
+    $response = $this->deleteJson("/api/admin/products/{$product->id}");
 
     $response->assertStatus(204);
 

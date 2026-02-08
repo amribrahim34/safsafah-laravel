@@ -10,8 +10,15 @@ test('can fetch products list', function () {
 
     $response = getJson('/api/products');
 
-    $response->assertStatus(404);
-    // Future assertion:
-    // $response->assertOk()
-    //     ->assertJsonCount(5, 'data');
+    $response->assertOk()
+        ->assertJsonStructure([
+            'data' => [
+                '*' => [
+                    'id',
+                    'nameEn',
+                    'price',
+                    'image',
+                ]
+            ]
+        ]);
 });

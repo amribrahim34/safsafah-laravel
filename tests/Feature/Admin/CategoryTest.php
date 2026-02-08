@@ -1,16 +1,18 @@
 <?php
 
 use App\Models\Category;
-use App\Models\User;
+use App\Models\Admin;
+use Laravel\Sanctum\Sanctum;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
 
 test('can list categories', function () {
-    $user = User::factory()->create();
+    $admin = Admin::factory()->create();
     Category::factory()->count(3)->create();
 
-    $response = $this->actingAs($user)->getJson('/api/admin/categories');
+    Sanctum::actingAs($admin, ['*']);
+    $response = $this->getJson('/api/admin/categories');
 
     $response->assertStatus(200)
         ->assertJsonStructure([
@@ -23,13 +25,14 @@ test('can list categories', function () {
 });
 
 test('can create category', function () {
-    $user = User::factory()->create();
+    $admin = Admin::factory()->create();
     $data = [
         'name_ar' => 'Test Cat AR',
         'name_en' => 'Test Cat EN',
     ];
 
-    $response = $this->actingAs($user)->postJson('/api/admin/categories', $data);
+    Sanctum::actingAs($admin, ['*']);
+    $response = $this->postJson('/api/admin/categories', $data);
 
     $response->assertStatus(201)
         ->assertJsonFragment($data);
@@ -38,10 +41,11 @@ test('can create category', function () {
 });
 
 test('can show category', function () {
-    $user = User::factory()->create();
+    $admin = Admin::factory()->create();
     $category = Category::factory()->create();
 
-    $response = $this->actingAs($user)->getJson("/api/admin/categories/{$category->id}");
+    Sanctum::actingAs($admin, ['*']);
+    $response = $this->getJson("/api/admin/categories/{$category->id}");
 
     $response->assertStatus(200)
         ->assertJsonFragment([
@@ -52,7 +56,7 @@ test('can show category', function () {
 });
 
 test('can update category', function () {
-    $user = User::factory()->create();
+    $admin = Admin::factory()->create();
     $category = Category::factory()->create();
 
     $data = [
@@ -60,7 +64,8 @@ test('can update category', function () {
         'name_en' => 'Updated Cat EN',
     ];
 
-    $response = $this->actingAs($user)->putJson("/api/admin/categories/{$category->id}", $data);
+    Sanctum::actingAs($admin, ['*']);
+    $response = $this->putJson("/api/admin/categories/{$category->id}", $data);
 
     $response->assertStatus(200)
         ->assertJsonFragment($data);
@@ -69,10 +74,11 @@ test('can update category', function () {
 });
 
 test('can delete category', function () {
-    $user = User::factory()->create();
+    $admin = Admin::factory()->create();
     $category = Category::factory()->create();
 
-    $response = $this->actingAs($user)->deleteJson("/api/admin/categories/{$category->id}");
+    Sanctum::actingAs($admin, ['*']);
+    $response = $this->deleteJson("/api/admin/categories/{$category->id}");
 
     $response->assertStatus(204);
 
