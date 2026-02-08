@@ -3,9 +3,42 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+Route::group(['prefix' => 'auth', 'namespace' => 'App\Http\Controllers\Website'], function () {
+    Route::post('login', 'AuthController@login');
+    Route::post('register', 'AuthController@register');
+});
+
+Route::group(['namespace' => 'App\Http\Controllers\Website'], function () {
+    Route::get('products', 'ProductController@index');
+    Route::get('products/{product}', 'ProductController@show');
+
+    Route::group(['middleware' => 'auth:sanctum'], function () {
+        Route::get('cart', 'CartController@index');
+        Route::post('cart/items', 'CartController@store');
+        Route::put('cart/items/{cartItem}', 'CartController@update');
+        Route::delete('cart/items/{cartItem}', 'CartController@destroy');
+        Route::post('cart/promo-code', 'CartController@applyPromoCode');
+
+        Route::post('orders', 'OrderController@store');
+        Route::get('orders/paginated', 'OrderController@index');
+
+        Route::post('beauty-profile', 'BeautyProfileController@store');
+        Route::get('beauty-questionnaire', 'BeautyQuestionnaireController@index');
+
+        Route::get('wishlist', 'WishlistController@index');
+        Route::post('wishlist', 'WishlistController@store'); // changed to body based logic usually, but test uses URL. Let's see. 
+        // Test uses: postJson("/api/wishlist/{$product->id}"); 
+        // So route should be: Route::post('wishlist/{product}', 'WishlistController@store');
+        Route::post('wishlist/{product}', 'WishlistController@store'); 
+        Route::delete('wishlist/{product}', 'WishlistController@destroy');
+
+        Route::get('profile/addresses', 'ProfileController@addresses');
+        Route::get('profile', 'ProfileController@show');
+        Route::put('profile', 'ProfileController@update');
+    });
+
+    Route::get('home', 'HomeController@index');
+});
 
 Route::prefix('admin')->group(function () {
     // Auth Routes

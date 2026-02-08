@@ -12,9 +12,8 @@ test('user can add product to wishlist', function () {
     $user = User::factory()->create();
     $product = Product::factory()->create();
 
-    $response = postJson("/api/wishlist/{$product->id}");
-
-    $response->assertStatus(404);
+    $response = $this->actingAs($user)->postJson("/api/wishlist/{$product->id}");
+    $response->assertStatus(201);
 });
 
 test('user can remove product from wishlist', function () {
@@ -22,7 +21,6 @@ test('user can remove product from wishlist', function () {
     $product = Product::factory()->create();
     WishList::factory()->create(['user_id' => $user->id, 'product_id' => $product->id]);
 
-    $response = deleteJson("/api/wishlist/{$product->id}");
-
-    $response->assertStatus(404);
+    $response = $this->actingAs($user)->deleteJson("/api/wishlist/{$product->id}");
+    $response->assertOk();
 });

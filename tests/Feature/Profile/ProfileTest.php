@@ -9,16 +9,25 @@ uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 test('user can get their profile', function () {
     $user = User::factory()->create();
 
-    $response = getJson('/api/profile/me');
+    $response = $this->actingAs($user)->getJson('/api/profile');
 
-    $response->assertStatus(404);
+    $response->assertOk()
+        ->assertJsonStructure([
+            'data' => [
+                'id',
+                'name',
+                'email',
+                'mobile',
+                'points',
+            ]
+        ]);
 });
 
 test('user can list their addresses', function () {
     $user = User::factory()->create();
     Address::factory()->count(2)->create(['user_id' => $user->id]);
 
-    $response = getJson('/api/profile/addresses');
+    $response = $this->actingAs($user)->getJson('/api/profile/addresses');
 
-    $response->assertStatus(404);
+    $response->assertOk();
 });

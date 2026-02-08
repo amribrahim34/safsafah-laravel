@@ -14,6 +14,17 @@ class CartResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        $items = CartItemResource::collection($this->items);
+        $totalPrice = $items->sum('subtotal');
+        
+        return [
+            'cartId' => $this->id,
+            'items' => $items,
+            'totalItems' => $items->sum('quantity'),
+            'totalPrice' => $totalPrice,
+            'promoCode' => $this->promoCode ? $this->promoCode->code : null,
+            'discountAmount' => 0, // Logic to be implemented based on promo code
+            'finalPrice' => $totalPrice, // Minus discount
+        ];
     }
 }

@@ -14,6 +14,10 @@ class BeautyQuestionnaireResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'skinTypes' => $this['skinTypes'] ?? [],
+            'skinConcerns' => $this['skinConcerns'] ?? [],
+            'activeIngredients' => $this['activeIngredients'] ?? [],
+        ];
     }
 }
