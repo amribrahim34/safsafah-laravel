@@ -22,9 +22,9 @@ class StoreOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'customerName' => 'required|string',
+            'customerName' => 'required|string|max:255',
             'customerAddress' => 'required|string',
-            'customerMobile' => 'required|string',
+            'customerMobile' => 'required|string|max:20',
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
             'deliveryNotes' => 'nullable|string',

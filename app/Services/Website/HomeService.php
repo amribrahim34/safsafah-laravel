@@ -14,11 +14,32 @@ class HomeService
     public function getHomeData()
     {
         return [
-            'sliders' => [], // Placeholder for sliders
-            'categories' => Category::take(6)->get(),
-            'brands' => Brand::take(8)->get(),
-            'featuredProducts' => Product::take(4)->get(),
-            'newArrivals' => Product::latest()->take(4)->get(),
+            'sliders' => [], 
+            'categories' => $this->getCategories(),
+            'brands' => $this->getBrands(),
+            'featuredProducts' => $this->getBestSellers(),
+            'newArrivals' => $this->getNewArrivals(),
         ];
+    }
+
+    public function getNewArrivals()
+    {
+        return Product::latest()->take(4)->get();
+    }
+
+    public function getCategories()
+    {
+        return Category::take(6)->get();
+    }
+
+    public function getBrands()
+    {
+        return Brand::take(8)->get();
+    }
+
+    public function getBestSellers()
+    {
+        // For now, returning featured products as best sellers
+        return Product::take(4)->get();
     }
 }

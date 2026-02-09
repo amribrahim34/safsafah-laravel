@@ -37,7 +37,13 @@ Route::group(['namespace' => 'App\Http\Controllers\Website'], function () {
         Route::put('profile', 'ProfileController@update');
     });
 
-    Route::get('home', 'HomeController@index');
+    Route::group(['prefix' => 'home'], function () {
+        Route::get('/', 'HomeController@index');
+        Route::get('new-arrival-products', 'HomeController@newArrivals');
+        Route::get('categories', 'HomeController@categories');
+        Route::get('brands', 'HomeController@brands');
+        Route::get('best-seller-products', 'HomeController@bestSellers');
+    });
 });
 
 Route::prefix('admin')->group(function () {

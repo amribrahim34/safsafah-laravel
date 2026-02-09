@@ -8,9 +8,9 @@ use function Pest\Laravel\getJson;
 uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 
 test('can fetch home data', function () {
-    \App\Models\Product::factory()->count(5)->create();
-    \App\Models\Category::factory()->count(3)->create();
-    \App\Models\Brand::factory()->count(3)->create();
+    Product::factory()->count(5)->create();
+    Category::factory()->count(3)->create();
+    Brand::factory()->count(3)->create();
 
     $response = getJson('/api/home');
 
@@ -22,6 +22,124 @@ test('can fetch home data', function () {
                 'brands',
                 'featuredProducts',
                 'newArrivals',
+            ]
+        ]);
+});
+
+test('can fetch brands home data', function () {
+    $brand = Brand::factory()->create([
+        'name_ar' => 'كوزركس',
+        'name_en' => 'cosrux 1',
+        'logo' => 'uploads/4418e83b-10fd-4875-945d-831000468eef.png'
+    ]);
+    $response = getJson('/api/home/brands');
+    $response->assertOk()
+        ->assertJson([
+            'data' => [
+                [
+                    'id' => $brand->id,
+                    'nameAr' => 'كوزركس',
+                    'nameEn' => 'cosrux 1',
+                    'logo' =>  $brand->logo_url
+                ]
+            ]
+        ]);
+});
+
+
+test('can fetch  home new-arrival-products data', function () {
+    $brand = Brand::factory()->create();
+    $category = Category::factory()->create();
+    $product = Product::factory()->create([
+        'name_ar' => 'كوزركس',
+        'name_en' => 'cosrux 1',
+        'brand_id' => $brand->id,
+        'category_id' => $category->id,
+        'description_ar' => 'وصف المنتج',
+        'description_en' => 'product description',
+        'price' => 100,
+        'discount' => 10,
+        'stock' => 10,
+        'image' => 'uploads/4418e83b-10fd-4875-945d-831000468eef.png'
+    ]);
+    $response = getJson('/api/home/new-arrival-products');
+
+    $response->assertOk()
+        ->assertJson([
+            'data' => [
+                [
+                    'id' => $product->id,
+                    'nameAr' => 'كوزركس',
+                    'nameEn' => 'cosrux 1',
+                    'image' =>  $product->image_url,
+                    'price' => $product->price,
+                    'brandNameAr' => $brand->name_ar,
+                    'brandNameEn' => $brand->name_en,
+                    'categoryNameAr' => $category->name_ar,
+                    'categoryNameEn' => $category->name_en,
+                    'rating' => $product->rating,
+                    'ratingCount' => $product->rating_count
+                ]
+            ]
+        ]);
+});
+
+
+test('can fetch  home best-seller-products data', function () {
+    $brand = Brand::factory()->create();
+    $category = Category::factory()->create();
+    $product = Product::factory()->create([
+        'name_ar' => 'كوزركس',
+        'name_en' => 'cosrux 1',
+        'brand_id' => $brand->id,
+        'category_id' => $category->id,
+        'description_ar' => 'وصف المنتج',
+        'description_en' => 'product description',
+        'price' => 100,
+        'discount' => 10,
+        'stock' => 10,
+        'image' => 'uploads/4418e83b-10fd-4875-945d-831000468eef.png'
+    ]);
+    $response = getJson('/api/home/best-seller-products');
+
+    $response->assertOk()
+        ->assertJson([
+            'data' => [
+                [
+                    'id' => $product->id,
+                    'nameAr' => 'كوزركس',
+                    'nameEn' => 'cosrux 1',
+                    'image' =>  $product->image_url,
+                    'price' => $product->price,
+                    'brandNameAr' => $brand->name_ar,
+                    'brandNameEn' => $brand->name_en,
+                    'categoryNameAr' => $category->name_ar,
+                    'categoryNameEn' => $category->name_en,
+                    'rating' => $product->rating,
+                    'ratingCount' => $product->rating_count
+                ]
+            ]
+        ]);
+});
+
+
+
+test('can fetch categories home data', function () {
+    $category = Category::factory()->create([
+        'name_ar' => 'العناية بالبشرة',
+        'name_en' => 'skin care',
+        'image' => 'uploads/4418e83b-10fd-4875-945d-831000468eef.png',
+    ]);
+    $response = getJson('/api/home/categories');
+    $response->assertOk()
+        ->assertJson([
+            'data' => [
+                [
+                    'id' => $category->id,
+                    'nameAr' => 'العناية بالبشرة',
+                    'nameEn' => 'skin care',
+                    'image'=> $category->image_url,
+                ]
             ]
         ]);
 });

@@ -19,4 +19,25 @@ class HomeController extends Controller
     {
         $data = $this->homeService->getHomeData();
         return response()->json(['data' => $data]);
-    }}
+    }
+
+    public function newArrivals()
+    {
+        return response()->json(['data' => $this->homeService->getNewArrivals()]);
+    }
+
+    public function categories()
+    {
+        return response()->json(['data' => $this->homeService->getCategories()]);
+    }
+
+    public function brands()
+    {
+        return response()->json(['data' => $this->homeService->getBrands()]);
+    }
+
+    public function bestSellers()
+    {
+        return response()->json(['data' => $this->homeService->getBestSellers()]);
+    }
+}
