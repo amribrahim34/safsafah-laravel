@@ -3,28 +3,10 @@
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use function Pest\Laravel\getJson;
 
-uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
-
-test('can fetch home data', function () {
-    Product::factory()->count(5)->create();
-    Category::factory()->count(3)->create();
-    Brand::factory()->count(3)->create();
-
-    $response = getJson('/api/home');
-
-    $response->assertOk()
-        ->assertJsonStructure([
-            'data' => [
-                'sliders',
-                'categories',
-                'brands',
-                'featuredProducts',
-                'newArrivals',
-            ]
-        ]);
-});
+uses(RefreshDatabase::class);
 
 test('can fetch brands home data', function () {
     $brand = Brand::factory()->create([

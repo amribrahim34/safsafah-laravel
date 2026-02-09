@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Website;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Website\Product\GetListRequest;
 use Illuminate\Http\Request;
 use App\Http\Resources\Website\ProductResource;
 use App\Services\Website\ProductService;
@@ -16,9 +17,9 @@ class ProductController extends Controller
         $this->productService = $productService;
     }
 
-    public function index(Request $request)
+    public function index(GetListRequest $request)
     {
-        $products = $this->productService->getProducts($request->all());
+        $products = $this->productService->getProducts($request->validated());
         return ProductResource::collection($products);
     }
 

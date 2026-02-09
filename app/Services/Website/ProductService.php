@@ -17,7 +17,19 @@ class ProductService
         if (isset($filters['category_id'])) {
             $query->where('category_id', $filters['category_id']);
         }
-        
+
+        if (isset($filters['brand_id'])) {
+            $query->where('brand_id', $filters['brand_id']);
+        }
+
+        if (isset($filters['skin_type_id'])) {
+            $query->where('skin_type_id', $filters['skin_type_id']);
+        }
+
+        if (isset($filters['price_range'])) {
+            $query->whereBetween('price', $filters['price_range']);
+        }
+
         if (isset($filters['search'])) {
              $query->where(function($q) use ($filters) {
                  $q->where('name_en', 'like', "%{$filters['search']}%")

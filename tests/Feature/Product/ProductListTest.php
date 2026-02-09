@@ -1,15 +1,14 @@
 <?php
 
 use App\Models\Product;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use function Pest\Laravel\getJson;
 
-uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
+uses(RefreshDatabase::class);
 
 test('can fetch products list', function () {
     Product::factory()->count(5)->create();
-
     $response = getJson('/api/products');
-
     $response->assertOk()
         ->assertJsonStructure([
             'data' => [
