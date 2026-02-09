@@ -21,10 +21,14 @@ class ProductResource extends JsonResource
             'descriptionAr' => $this->description_ar,
             'descriptionEn' => $this->description_en,
             'categoryId' => $this->category_id,
+            'category'=> $this->category,
+            'brand'=> $this->brand,
             'brandId' => $this->brand_id,
             'price' => $this->price,
             'image' => $this->image_url,
             'sku' => $this->sku,
+            'rating' => $this->rating,
+            'ratingCount' => $this->rating_count,
         ];
     }
 }

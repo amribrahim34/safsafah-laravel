@@ -48,76 +48,26 @@ test('can fetch brands home data', function () {
 
 
 test('can fetch  home new-arrival-products data', function () {
-    $brand = Brand::factory()->create();
-    $category = Category::factory()->create();
-    $product = Product::factory()->create([
-        'name_ar' => 'كوزركس',
-        'name_en' => 'cosrux 1',
-        'brand_id' => $brand->id,
-        'category_id' => $category->id,
-        'description_ar' => 'وصف المنتج',
-        'description_en' => 'product description',
-        'price' => 100,
-        'discount' => 10,
-        'stock' => 10,
-        'image' => 'uploads/4418e83b-10fd-4875-945d-831000468eef.png'
-    ]);
+    [$product, $brand, $category] = createProductWithRelations();
     $response = getJson('/api/home/new-arrival-products');
 
     $response->assertOk()
         ->assertJson([
             'data' => [
-                [
-                    'id' => $product->id,
-                    'nameAr' => 'كوزركس',
-                    'nameEn' => 'cosrux 1',
-                    'image' =>  $product->image_url,
-                    'price' => $product->price,
-                    'brandNameAr' => $brand->name_ar,
-                    'brandNameEn' => $brand->name_en,
-                    'categoryNameAr' => $category->name_ar,
-                    'categoryNameEn' => $category->name_en,
-                    'rating' => $product->rating,
-                    'ratingCount' => $product->rating_count
-                ]
+                getExpectedProductJson($product, $brand, $category)
             ]
         ]);
 });
 
 
 test('can fetch  home best-seller-products data', function () {
-    $brand = Brand::factory()->create();
-    $category = Category::factory()->create();
-    $product = Product::factory()->create([
-        'name_ar' => 'كوزركس',
-        'name_en' => 'cosrux 1',
-        'brand_id' => $brand->id,
-        'category_id' => $category->id,
-        'description_ar' => 'وصف المنتج',
-        'description_en' => 'product description',
-        'price' => 100,
-        'discount' => 10,
-        'stock' => 10,
-        'image' => 'uploads/4418e83b-10fd-4875-945d-831000468eef.png'
-    ]);
+    [$product, $brand, $category] = createProductWithRelations();
     $response = getJson('/api/home/best-seller-products');
 
     $response->assertOk()
         ->assertJson([
             'data' => [
-                [
-                    'id' => $product->id,
-                    'nameAr' => 'كوزركس',
-                    'nameEn' => 'cosrux 1',
-                    'image' =>  $product->image_url,
-                    'price' => $product->price,
-                    'brandNameAr' => $brand->name_ar,
-                    'brandNameEn' => $brand->name_en,
-                    'categoryNameAr' => $category->name_ar,
-                    'categoryNameEn' => $category->name_en,
-                    'rating' => $product->rating,
-                    'ratingCount' => $product->rating_count
-                ]
+                getExpectedProductJson($product, $brand, $category)
             ]
         ]);
 });
@@ -143,3 +93,41 @@ test('can fetch categories home data', function () {
             ]
         ]);
 });
+
+function createProductWithRelations()
+{
+    $brand = Brand::factory()->create();
+    $category = Category::factory()->create();
+    $product = Product::factory()->create([
+        'name_ar' => 'كوزركس',
+        'name_en' => 'cosrux 1',
+        'brand_id' => $brand->id,
+        'category_id' => $category->id,
+        'description_ar' => 'وصف المنتج',
+        'description_en' => 'product description',
+        'price' => 100,
+        'image' => 'uploads/4418e83b-10fd-4875-945d-831000468eef.png'
+    ]);
+    return [$product, $brand, $category];
+}
+
+function getExpectedProductJson($product, $brand, $category)
+{
+    return [
+        'id' => $product->id,
+        'nameAr' => 'كوزركس',
+        'nameEn' => 'cosrux 1',
+        'image' =>  $product->image_url,
+        'price' => $product->price,
+        'brand' => [
+            'name_ar' => $brand->name_ar,
+            'name_en' => $brand->name_en,
+        ],
+        'category' => [
+            'name_ar' => $category->name_ar,
+            'name_en' => $category->name_en,
+        ],
+        'rating' => $product->rating,
+        'ratingCount' => $product->rating_count
+    ];
+}

@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Website;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Website\BrandResource;
+use App\Http\Resources\Website\CategoryResource;
+use App\Http\Resources\Website\ProductResource;
 use Illuminate\Http\Request;
 use App\Services\Website\HomeService;
 
@@ -23,21 +26,25 @@ class HomeController extends Controller
 
     public function newArrivals()
     {
-        return response()->json(['data' => $this->homeService->getNewArrivals()]);
+        $data = $this->homeService->getNewArrivals();
+        return response()->json(['data' => ProductResource::collection($data)]);
     }
 
     public function categories()
     {
-        return response()->json(['data' => $this->homeService->getCategories()]);
+        $data = $this->homeService->getCategories();
+        return response()->json(['data' => CategoryResource::collection($data)]);
     }
 
     public function brands()
     {
-        return response()->json(['data' => $this->homeService->getBrands()]);
+        $data = $this->homeService->getBrands();
+        return response()->json(['data' => BrandResource::collection($data)]);
     }
 
     public function bestSellers()
     {
-        return response()->json(['data' => $this->homeService->getBestSellers()]);
+        $data = $this->homeService->getBestSellers();
+        return response()->json(['data' => ProductResource::collection($data)]);
     }
 }

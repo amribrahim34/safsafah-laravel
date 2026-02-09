@@ -72,4 +72,14 @@ class Product extends Model
     {
         return $this->image ? asset('storage/' . $this->image) : null;
     }
+
+    public function getRatingAttribute()
+    {
+        return $this->reviews()->avg('rating');
+    }
+
+    public function getRatingCountAttribute()
+    {
+        return $this->reviews()->count();
+    }
 }
