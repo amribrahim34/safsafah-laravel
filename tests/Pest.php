@@ -41,7 +41,47 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+/**
+ * Create a product with related brand and category for testing
+ */
+function createProductWithRelations(
+    array $productData = [],
+    bool $useNullCategory = false,
+    bool $useNullBrand = false
+): array {
+    $brand = $useNullBrand ? null : \App\Models\Brand::factory()->create();
+    $category = $useNullCategory ? null : \App\Models\Category::factory()->create();
+
+    $defaults = [
+        'brand_id' => $brand?->id,
+        'category_id' => $category?->id,
+    ];
+
+    $product = \App\Models\Product::factory()->create(array_merge($defaults, $productData));
+
+    return [$product, $brand, $category];
+}
+
+/**
+ * Get expected product JSON structure for assertions
+ */
+function getExpectedProductJson($product, $brand, $category): array
 {
-    // ..
+    return [
+        'id' => $product->id,
+        'nameAr' => $product->name_ar,
+        'nameEn' => $product->name_en,
+        'image' => $product->image_url,
+        'price' => $product->price,
+        'brand' => [
+            'name_ar' => $brand->name_ar,
+            'name_en' => $brand->name_en,
+        ],
+        'category' => [
+            'name_ar' => $category->name_ar,
+            'name_en' => $category->name_en,
+        ],
+        'rating' => $product->rating,
+        'ratingCount' => $product->rating_count
+    ];
 }

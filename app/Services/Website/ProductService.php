@@ -9,35 +9,39 @@ class ProductService
     /**
      * Create a new class instance.
      */
-    public function getProducts($filters = [])
+    public function getProducts(array $filters = [])
     {
         $query = Product::query();
 
-        // Basic filtering example
-        if (isset($filters['category_id'])) {
-            $query->where('category_id', $filters['category_id']);
+        if (isset($filters['categoryId'])) {
+            $query->where('category_id', $filters['categoryId']);
         }
 
-        if (isset($filters['brand_id'])) {
-            $query->where('brand_id', $filters['brand_id']);
+        if (isset($filters['brandId'])) {
+            $query->where('brand_id', $filters['brandId']);
         }
 
-        if (isset($filters['skin_type_id'])) {
-            $query->where('skin_type_id', $filters['skin_type_id']);
+        if (isset($filters['skinTypeId'])) {
+            $query->whereHas('skinTypes', function ($q) use ($filters) {
+                $q->where('skin_types.id', $filters['skinTypeId']);
+            });
         }
 
-        if (isset($filters['price_range'])) {
-            $query->whereBetween('price', $filters['price_range']);
+        if (isset($filters['minPrice'])) {
+            $query->where('price', '>=', $filters['minPrice']);
         }
 
-        if (isset($filters['search'])) {
-             $query->where(function($q) use ($filters) {
-                 $q->where('name_en', 'like', "%{$filters['search']}%")
-                   ->orWhere('name_ar', 'like', "%{$filters['search']}%");
-             });
+        if (isset($filters['maxPrice'])) {
+            $query->where('price', '<=', $filters['maxPrice']);
         }
 
-        return $query->paginate(12);
+        if (isset($filters['searchQuery'])) {
+            $query->search($filters['searchQuery']);
+        }
+
+        $perPage = $filters['limit'] ?? 12;
+
+        return $query->paginate($perPage);
     }
 
     public function getProduct($id)

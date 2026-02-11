@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Website;
 
+
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Website\Product\GetListRequest;
-use Illuminate\Http\Request;
 use App\Http\Resources\Website\ProductResource;
 use App\Services\Website\ProductService;
 
