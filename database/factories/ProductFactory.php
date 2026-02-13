@@ -18,10 +18,12 @@ class ProductFactory extends Factory
      */
     public function definition(): array
     {
+        $fakerAr = \Faker\Factory::create('ar_SA');
+
         return [
-            'name_ar' => $this->faker->words(3, true),
+            'name_ar' => $fakerAr->realText(50),
             'name_en' => $this->faker->words(3, true),
-            'description_ar' => $this->faker->paragraph(),
+            'description_ar' => $fakerAr->realText(200),
             'description_en' => $this->faker->paragraph(),
             'category_id' => Category::factory(),
             'brand_id' => Brand::factory(),
