@@ -22,4 +22,14 @@ class SkinType extends Model
             });
         });
     }
+
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, 'product_skin_types');
+    }
+
+    public function scopeHasProducts($query)
+    {
+        return $query->whereHas('products');
+    }
 }

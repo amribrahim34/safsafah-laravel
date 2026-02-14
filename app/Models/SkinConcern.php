@@ -22,4 +22,14 @@ class SkinConcern extends Model
             });
         });
     }
+
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, 'product_skin_concerns');
+    }
+
+    public function scopeHasProducts($query)
+    {
+        return $query->whereHas('products');
+    }
 }

@@ -20,9 +20,9 @@ test('can filter products by categoryId', function () {
     $response = getJson("/api/products?categoryId={$category1->id}");
 
     $response->assertOk()
-        ->assertJsonCount(2, 'data')
-        ->assertJsonPath('data.0.id', $product1->id)
-        ->assertJsonPath('data.1.id', $product3->id);
+        ->assertJsonCount(2, 'products')
+        ->assertJsonPath('products.0.id', $product1->id)
+        ->assertJsonPath('products.1.id', $product3->id);
 });
 
 test('can fetch products list with correct response structure', function () {
@@ -49,9 +49,9 @@ test('can fetch products list with correct response structure', function () {
     $response = getJson('/api/products');
 
     $response->assertOk()
-        ->assertJsonCount(2, 'data')
+        ->assertJsonCount(2, 'products')
         ->assertJsonStructure([
-            'data' => [
+            'products' => [
                 '*' => [
                     'id',
                     'nameAr',
@@ -65,20 +65,23 @@ test('can fetch products list with correct response structure', function () {
                     'sku',
                 ],
             ],
+            'total',
+            'page',
+            'limit',
         ])
         // Test first product has the expected values
-        ->assertJsonPath('data.0.id', $product1->id)
-        ->assertJsonPath('data.0.nameAr', 'سيرم الحلزون')
-        ->assertJsonPath('data.0.nameEn', 'snail serum')
-        ->assertJsonPath('data.0.categoryId', $category1->id)
-        ->assertJsonPath('data.0.brandId', $brand1->id)
-        ->assertJsonPath('data.0.price', $product1->price)
-        ->assertJsonPath('data.0.sku', 'SNA-SER-642')
+        ->assertJsonPath('products.0.id', $product1->id)
+        ->assertJsonPath('products.0.nameAr', 'سيرم الحلزون')
+        ->assertJsonPath('products.0.nameEn', 'snail serum')
+        ->assertJsonPath('products.0.categoryId', $category1->id)
+        ->assertJsonPath('products.0.brandId', $brand1->id)
+        ->assertJsonPath('products.0.price', $product1->price)
+        ->assertJsonPath('products.0.sku', 'SNA-SER-642')
         // Test second product has null category and brand
-        ->assertJsonPath('data.1.id', $product2->id)
-        ->assertJsonPath('data.1.categoryId', null)
-        ->assertJsonPath('data.1.brandId', null)
-        ->assertJsonPath('data.1.price', $product2->price);
+        ->assertJsonPath('products.1.id', $product2->id)
+        ->assertJsonPath('products.1.categoryId', null)
+        ->assertJsonPath('products.1.brandId', null)
+        ->assertJsonPath('products.1.price', $product2->price);
 });
 
 
@@ -93,9 +96,9 @@ test('can filter products by brandId', function () {
     $response = getJson("/api/products?brandId={$brand1->id}");
 
     $response->assertOk()
-        ->assertJsonCount(2, 'data')
-        ->assertJsonPath('data.0.id', $product1->id)
-        ->assertJsonPath('data.1.id', $product3->id);
+        ->assertJsonCount(2, 'products')
+        ->assertJsonPath('products.0.id', $product1->id)
+        ->assertJsonPath('products.1.id', $product3->id);
 });
 
 test('can filter products by skinTypeId', function () {
@@ -114,9 +117,9 @@ test('can filter products by skinTypeId', function () {
     $response = getJson("/api/products?skinTypeId={$skinType1->id}");
 
     $response->assertOk()
-        ->assertJsonCount(2, 'data')
-        ->assertJsonPath('data.0.id', $product1->id)
-        ->assertJsonPath('data.1.id', $product3->id);
+        ->assertJsonCount(2, 'products')
+        ->assertJsonPath('products.0.id', $product1->id)
+        ->assertJsonPath('products.1.id', $product3->id);
 });
 
 test('can filter products by minPrice', function () {
@@ -127,9 +130,9 @@ test('can filter products by minPrice', function () {
     $response = getJson('/api/products?minPrice=50');
 
     $response->assertOk()
-        ->assertJsonCount(2, 'data')
-        ->assertJsonPath('data.0.id', $product2->id)
-        ->assertJsonPath('data.1.id', $product3->id);
+        ->assertJsonCount(2, 'products')
+        ->assertJsonPath('products.0.id', $product2->id)
+        ->assertJsonPath('products.1.id', $product3->id);
 });
 
 test('can filter products by maxPrice', function () {
@@ -140,9 +143,9 @@ test('can filter products by maxPrice', function () {
     $response = getJson('/api/products?maxPrice=50');
 
     $response->assertOk()
-        ->assertJsonCount(2, 'data')
-        ->assertJsonPath('data.0.id', $product1->id)
-        ->assertJsonPath('data.1.id', $product2->id);
+        ->assertJsonCount(2, 'products')
+        ->assertJsonPath('products.0.id', $product1->id)
+        ->assertJsonPath('products.1.id', $product2->id);
 });
 
 test('can filter products by price range with both minPrice and maxPrice', function () {
@@ -154,9 +157,9 @@ test('can filter products by price range with both minPrice and maxPrice', funct
     $response = getJson('/api/products?minPrice=50&maxPrice=100');
 
     $response->assertOk()
-        ->assertJsonCount(2, 'data')
-        ->assertJsonPath('data.0.id', $product2->id)
-        ->assertJsonPath('data.1.id', $product3->id);
+        ->assertJsonCount(2, 'products')
+        ->assertJsonPath('products.0.id', $product2->id)
+        ->assertJsonPath('products.1.id', $product3->id);
 });
 
 test('can search products by searchQuery', function () {
@@ -178,14 +181,14 @@ test('can search products by searchQuery', function () {
     // Search in Arabic
     $response = getJson('/api/products?searchQuery=سيرم');
     $response->assertOk()
-        ->assertJsonCount(2, 'data')
-        ->assertJsonPath('data.0.id', $product1->id)
-        ->assertJsonPath('data.1.id', $product3->id);
+        ->assertJsonCount(2, 'products')
+        ->assertJsonPath('products.0.id', $product1->id)
+        ->assertJsonPath('products.1.id', $product3->id);
 
     // Search in English
     $response = getJson('/api/products?searchQuery=Serum');
     $response->assertOk()
-        ->assertJsonCount(2, 'data');
+        ->assertJsonCount(2, 'products');
 });
 
 test('can filter products with combined filters', function () {
@@ -217,8 +220,8 @@ test('can filter products with combined filters', function () {
     $response = getJson("/api/products?categoryId={$category->id}&brandId={$brand->id}&skinTypeId={$skinType->id}&minPrice=30&maxPrice=100&searchQuery=Vitamin");
 
     $response->assertOk()
-        ->assertJsonCount(1, 'data')
-        ->assertJsonPath('data.0.id', $product1->id);
+        ->assertJsonCount(1, 'products')
+        ->assertJsonPath('products.0.id', $product1->id);
 });
 
 test('supports pagination with limit parameter', function () {
@@ -227,9 +230,9 @@ test('supports pagination with limit parameter', function () {
     $response = getJson('/api/products?limit=5');
 
     $response->assertOk()
-        ->assertJsonCount(5, 'data')
-        ->assertJsonPath('meta.per_page', 5)
-        ->assertJsonPath('meta.total', 20);
+        ->assertJsonCount(5, 'products')
+        ->assertJsonPath('limit', 5)
+        ->assertJsonPath('total', 20);
 });
 
 test('supports pagination with page parameter', function () {
@@ -238,9 +241,9 @@ test('supports pagination with page parameter', function () {
     $response = getJson('/api/products?limit=5&page=2');
 
     $response->assertOk()
-        ->assertJsonCount(5, 'data')
-        ->assertJsonPath('meta.current_page', 2)
-        ->assertJsonPath('meta.per_page', 5);
+        ->assertJsonCount(5, 'products')
+        ->assertJsonPath('page', 2)
+        ->assertJsonPath('limit', 5);
 });
 
 test('uses default pagination limit when not specified', function () {
@@ -249,5 +252,5 @@ test('uses default pagination limit when not specified', function () {
     $response = getJson('/api/products');
 
     $response->assertOk()
-        ->assertJsonPath('meta.per_page', 12);
+        ->assertJsonPath('limit', 12);
 });

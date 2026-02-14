@@ -54,4 +54,14 @@ class Category extends Model
             $q->where('parent_id', $parentId);
         });
     }
+
+    public function scopeHasProducts($query)
+    {
+        return $query->whereHas('products');
+    }
+
+    public function scopeHasChildren($query)
+    {
+        return $query->whereHas('children');
+    }
 }

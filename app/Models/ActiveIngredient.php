@@ -22,4 +22,14 @@ class ActiveIngredient extends Model
             });
         });
     }
+
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, 'product_active_ingredients');
+    }
+
+    public function scopeHasProducts($query)
+    {
+        return $query->whereHas('products');
+    }
 }

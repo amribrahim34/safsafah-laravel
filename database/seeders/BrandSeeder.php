@@ -23,6 +23,17 @@ class BrandSeeder extends Seeder
             ['en' => 'The Ordinary', 'ar' => 'ذا أورديناري'],
             ['en' => 'Beauty of Joseon', 'ar' => 'بيوتي أوف جوسون'],
             ['en' => 'Infinity', 'ar' => 'إنفينيتي'],
+            ['en' => 'Skin1004', 'ar' => 'سكين1004'],
+            ['en' => 'Farm Stay', 'ar' => 'فارم ستاي'],
+            ['en' => 'Melatime', 'ar' => 'ميلاتايم'],
+            ['en' => 'Medicube', 'ar' => 'ميديكيوب'],
+            ['en' => 'Estee Lauder', 'ar' => 'إستي لودر'],
+            ['en' => 'L\'Oréal', 'ar' => 'لوريال'],
+            ['en' => 'Olaplex', 'ar' => 'أولابليكس'],
+            ['en' => 'AXIS-Y', 'ar' => 'أكسيس-واي'],
+            ['en' => 'Kiko', 'ar' => 'كيكو'],
+            ['en' => 'Maybelline', 'ar' => 'ميبيلين'],
+            ['en' => 'La Roche-Posay', 'ar' => 'لاروش بوزيه'],
         ];
 
         foreach ($brands as $brand) {

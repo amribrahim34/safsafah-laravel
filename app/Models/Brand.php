@@ -36,4 +36,11 @@ class Brand extends Model
             return asset('storage/' . $img);
         }
     }
+
+    public function scopeHasProducts($query)
+    {
+        return $query->whereHas('products');
+    }
+
+    
 }
