@@ -41,7 +41,8 @@ class ProductService
 
         $perPage = $filters['limit'] ?? 12;
 
-        return $query->paginate($perPage);
+        $data = $query->paginate($perPage);
+        return $data;
     }
 
     public function getProduct($id)

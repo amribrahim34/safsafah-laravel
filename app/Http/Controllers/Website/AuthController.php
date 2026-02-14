@@ -28,7 +28,7 @@ class AuthController extends Controller
                 'token' => $data['token'],
             ]);
         } catch (AuthenticationException $e) {
-            return response()->json(['message' => 'Invalid credentials'], 401);
+            return response()->json(['message' => __('website/auth.wrong_credentials')], 401);
         }
     }
 
