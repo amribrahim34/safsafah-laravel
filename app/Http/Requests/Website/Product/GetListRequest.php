@@ -22,9 +22,12 @@ class GetListRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'categoryId' => 'nullable|exists:categories,id',
-            'brandId' => 'nullable|exists:brands,id',
-            'skinTypeId' => 'nullable|exists:skin_types,id',
+            'categoryIds' => 'nullable|array',
+            'categoryIds.*' => 'exists:categories,id',
+            'brandIds' => 'nullable|array',
+            'brandIds.*' => 'exists:brands,id',
+            'skinTypeIds' => 'nullable|array',
+            'skinTypeIds.*' => 'exists:skin_types,id',
             'minPrice' => 'nullable|numeric|min:0',
             'maxPrice' => 'nullable|numeric|min:0',
             'searchQuery' => 'nullable|string|max:255',

@@ -13,17 +13,17 @@ class ProductService
     {
         $query = Product::query();
 
-        if (isset($filters['categoryId'])) {
-            $query->where('category_id', $filters['categoryId']);
+        if (isset($filters['categoryIds'])) {
+            $query->whereIn('category_id', $filters['categoryIds']);
         }
 
-        if (isset($filters['brandId'])) {
-            $query->where('brand_id', $filters['brandId']);
+        if (isset($filters['brandIds'])) {
+            $query->whereIn('brand_id', $filters['brandIds']);
         }
 
-        if (isset($filters['skinTypeId'])) {
+        if (isset($filters['skinTypeIds'])) {
             $query->whereHas('skinTypes', function ($q) use ($filters) {
-                $q->where('skin_types.id', $filters['skinTypeId']);
+                $q->whereIn('skin_types.id', $filters['skinTypeIds']);
             });
         }
 
