@@ -27,6 +27,18 @@ class ProductService
             });
         }
 
+        if (isset($filters['skinConcernIds'])) {
+            $query->whereHas('skinConcerns', function ($q) use ($filters) {
+                $q->whereIn('skin_concerns.id', $filters['skinConcernIds']);
+            });
+        }
+
+        if (isset($filters['activeIngredientIds'])) {
+            $query->whereHas('activeIngredients', function ($q) use ($filters) {
+                $q->whereIn('active_ingredients.id', $filters['activeIngredientIds']);
+            });
+        }
+
         if (isset($filters['minPrice'])) {
             $query->where('price', '>=', $filters['minPrice']);
         }
