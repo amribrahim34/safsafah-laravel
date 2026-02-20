@@ -28,6 +28,7 @@ class ProductResource extends JsonResource
             'image' => $this->image_url,
             'sku' => $this->sku,
             'rating' => $this->rating,
+            'isInWishlist' => $this->is_in_wishlist,
             'ratingCount' => $this->rating_count,
         ];
     }
