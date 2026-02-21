@@ -38,7 +38,7 @@ class CategoryService
    public function makeCategory($data)
    {
         if(isset($data['image'])){
-             $data['image'] = $this->fileUploadService->upload($data['image'], 'categories');
+             $data['image'] = $this->fileUploadService->upload($data['image'], 'categories' , $data['name_en']);
         }
         return Category::create($data);
    }
@@ -47,7 +47,7 @@ class CategoryService
    {
         $category = Category::findOrFail($id);
         if(isset($data['image'])){
-            $data['image'] = $this->fileUploadService->updateImage($category->image, $data['image'], 'categories');
+            $data['image'] = $this->fileUploadService->updateImage($category->image, $data['image'], 'categories' , $data['name_en']);
         }
         $category->update($data);
         return $category;

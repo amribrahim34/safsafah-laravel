@@ -27,7 +27,7 @@ class BrandService
     public function createBrand($data)
     {
         if (isset($data['logo'])) {
-            $data['logo'] = $this->fileUploadService->upload($data['logo'], 'brands');
+            $data['logo'] = $this->fileUploadService->upload($data['logo'], 'brands' , $data['name_en']);
         }
         return Brand::create($data);
     }
@@ -36,7 +36,7 @@ class BrandService
     {
         $brand = Brand::findOrFail($id);
         if (isset($data['logo'])) {
-            $data['logo'] = $this->fileUploadService->updateImage($brand->logo, $data['logo'], 'brands');
+            $data['logo'] = $this->fileUploadService->updateImage($brand->logo, $data['logo'], 'brands', $data['name_en']);
         }
         $brand->update($data);
         return $brand;

@@ -2,44 +2,68 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class FileUploadService
 {
-    public function upload($file, $folder)
+    private function sanitizeFileName(string $fileName): string
     {
-        return Storage::disk('public')->put($folder, $file);
+        $extension = pathinfo($fileName, PATHINFO_EXTENSION);
+        $baseName  = pathinfo($fileName, PATHINFO_FILENAME);
+
+        return Str::slug($baseName) . ($extension ? '.' . strtolower($extension) : '');
     }
 
-    public function updateImage($oldPath, $newFile, $folder)
+    public function upload($file, $folder, $name = null)
     {
-        if($oldPath && Storage::disk('public')->exists($oldPath)){
+        if ($name) {
+            $fileName = $this->sanitizeFileName($name . '.' . $file->getClientOriginalExtension());
+        } else {
+            $fileName = $this->sanitizeFileName($file->getClientOriginalName());
+        }
+
+        return Storage::disk('public')->putFileAs($folder, $file, $fileName);
+    }
+
+    public function updateImage($oldPath, $newFile, $folder, $name = null)
+    {
+        if ($oldPath && Storage::disk('public')->exists($oldPath)) {
             Storage::disk('public')->delete($oldPath);
         }
-        return $this->upload($newFile, $folder);
+
+        if ($name) {
+            $fileName = $this->sanitizeFileName($name . '.' . $newFile->getClientOriginalExtension());
+        } else {
+            $fileName = $this->sanitizeFileName($newFile->getClientOriginalName());
+        }
+
+        return Storage::disk('public')->putFileAs($folder, $newFile, $fileName);
     }
 
-    public function uploadMultiple($files, $folder)
+    public function uploadMultiple($files, $folder, $name = null)
     {
         $paths = [];
         foreach ($files as $file) {
-            $paths[] = $this->upload($file, $folder);
+            $paths[] = $this->upload($file, $folder, $name);
         }
+
         return $paths;
     }
 
-    public function updateMultiple($oldPaths, $newFiles, $folder)
+    public function updateMultiple($oldPaths, $newFiles, $folder, $name = null)
     {
         foreach ($oldPaths as $oldPath) {
-             if($oldPath && Storage::disk('public')->exists($oldPath)){
+            if ($oldPath && Storage::disk('public')->exists($oldPath)) {
                 Storage::disk('public')->delete($oldPath);
             }
         }
+
         $paths = [];
         foreach ($newFiles as $file) {
-            $paths[] = $this->upload($file, $folder);
+            $paths[] = $this->upload($file, $folder, $name);
         }
+
         return $paths;
     }
 }

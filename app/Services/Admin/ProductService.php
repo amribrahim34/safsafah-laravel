@@ -31,7 +31,7 @@ class ProductService
     public function createProduct($data)
     {
         if (isset($data['image'])) {
-            $data['image'] = $this->fileUploadService->upload($data['image'], 'products');
+            $data['image'] = $this->fileUploadService->upload($data['image'], 'products' , $data['name_en']);
         }
         
         $product = Product::create($data);
@@ -46,7 +46,7 @@ class ProductService
         $product = Product::findOrFail($id);
 
         if (isset($data['image'])) {
-            $data['image'] = $this->fileUploadService->updateImage($product->image, $data['image'], 'products');
+            $data['image'] = $this->fileUploadService->updateImage($product->image, $data['image'], 'products' , $data['name_en']);
         }
 
         $product->update($data);

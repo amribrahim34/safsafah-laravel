@@ -27,7 +27,7 @@ class UpdateProductRequest extends FormRequest
             'description_ar' => 'nullable|string',
             'description_en' => 'nullable|string',
             'price' => 'required|numeric',
-            'sku' => 'nullable|string|max:255|unique:products,sku,' . $this->route('id'),
+            'sku' => 'nullable|string|max:255|unique:products,sku,' . $this->route('product'),
             'category_id' => 'required|exists:categories,id',
             'brand_id' => 'required|exists:brands,id',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
