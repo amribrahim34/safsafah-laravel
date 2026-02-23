@@ -9,6 +9,7 @@ use App\Models\Brand;
 use App\Models\SkinType;
 use App\Models\SkinConcern;
 use App\Models\ActiveIngredient;
+use Illuminate\Support\Str;
 
 class ProductSeeder extends Seeder
 {
@@ -923,6 +924,8 @@ class ProductSeeder extends Seeder
             $product = Product::factory()->create([
                 'name_ar' => $productData['name_ar'],
                 'name_en' => $productData['name_en'],
+                'slug_ar' => arabic_slug($productData['name_ar']),
+                'slug_en' => Str::slug($productData['name_en']),
                 'category_id' => $productData['category_id'],
                 'brand_id' => $productData['brand_id'],
                 'price' => $productData['price'],

@@ -13,6 +13,8 @@ class Product extends Model
         'name_en',
         'description_ar',
         'description_en',
+        'slug_ar',
+        'slug_en',
         'category_id',
         'brand_id',
         'price',

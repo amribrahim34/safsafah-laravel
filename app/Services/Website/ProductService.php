@@ -57,8 +57,11 @@ class ProductService
         return $data;
     }
 
-    public function getProduct($id)
+    public function getProduct($selector)
     {
-        return Product::findOrFail($id);
+        return Product::where('slug_ar', $selector)
+        ->orWhere('slug_en', $selector)
+        ->orWhere('id', $selector)
+        ->firstOrFail();
     }
 }

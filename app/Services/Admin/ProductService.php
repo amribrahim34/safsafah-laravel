@@ -5,6 +5,7 @@ namespace App\Services\Admin;
 use App\Models\Product;
 use App\Services\FileUploadService;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ProductService
 {
@@ -33,7 +34,10 @@ class ProductService
         if (isset($data['image'])) {
             $data['image'] = $this->fileUploadService->upload($data['image'], 'products' , $data['name_en']);
         }
-        
+
+        $data['slug_ar'] = arabic_slug($data['name_ar']);
+        $data['slug_en'] = Str::slug($data['name_en']);
+
         $product = Product::create($data);
 
         $this->syncRelations($product, $data);
@@ -48,6 +52,9 @@ class ProductService
         if (isset($data['image'])) {
             $data['image'] = $this->fileUploadService->updateImage($product->image, $data['image'], 'products' , $data['name_en']);
         }
+
+        isset($data['name_ar']) ? $data['slug_ar'] = arabic_slug($data['name_ar']) : null;
+        isset($data['name_en']) ? $data['slug_en'] = Str::slug($data['name_en']) : null;
 
         $product->update($data);
 

@@ -18,6 +18,8 @@ class ProductResource extends JsonResource
             'id' => $this->id,
             'name_ar' => $this->name_ar,
             'name_en' => $this->name_en,
+            'slug_ar' => $this->slug_ar,
+            'slug_en' => $this->slug_en,
             'description_ar' => $this->description_ar,
             'description_en' => $this->description_en,
             'price' => $this->price,

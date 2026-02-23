@@ -23,8 +23,8 @@ class ProductController extends Controller
         return ProductResource::collection($products);
     }
 
-    public function show($id)
+    public function show($selector)
     {
-         $product = $this->productService->getProduct($id);
+         $product = $this->productService->getProduct($selector);
          return new ProductResource($product);
     }}
