@@ -15,9 +15,9 @@ class BeautyQuestionnaireResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'skinTypes' => $this['skinTypes'] ?? [],
-            'skinConcerns' => $this['skinConcerns'] ?? [],
-            'activeIngredients' => $this['activeIngredients'] ?? [],
+            'skinTypes' => SkinTypeResource::collection($this['skinTypes'] ?? []),
+            'skinConcerns' => SkinConcernResource::collection($this['skinConcerns'] ?? []),
+            'activeIngredients' => SkinActiveIngredientResource::collection($this['activeIngredients'] ?? []),
         ];
     }
 }

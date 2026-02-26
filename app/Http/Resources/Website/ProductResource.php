@@ -30,7 +30,7 @@ class ProductResource extends JsonResource
             'price' => $this->price,
             'image' => $this->image_url,
             'sku' => $this->sku,
-            'rating' => $this->rating,
+            'rating' => $this->rating ?? 0,
             'isInWishlist' => $this->is_in_wishlist,
             'ratingCount' => $this->rating_count,
         ];
