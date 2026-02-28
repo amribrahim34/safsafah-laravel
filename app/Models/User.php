@@ -89,6 +89,11 @@ class User extends Authenticatable
         return $this->hasMany(WishList::class);
     }
 
+    public function wishListItems()
+    {
+        return $this->hasManyThrough(Product::class, WishList::class, 'user_id', 'id', 'id', 'product_id');
+    }
+
     public function pointsTransactions()
     {
         return $this->hasMany(PointsTransaction::class);

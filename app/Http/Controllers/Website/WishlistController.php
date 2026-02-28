@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Website;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Website\ProductResource;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Http\Resources\Website\WishlistResource;
@@ -19,8 +20,8 @@ class WishlistController extends Controller
 
     public function index(Request $request)
     {
-        $wishlist = $this->wishlistService->getWishlist($request->user());
-        return WishlistResource::collection($wishlist);
+        $products = $this->wishlistService->getWishlist();
+        return ProductResource::collection($products);
     }
 
     public function store(Request $request, $product)
@@ -34,14 +35,14 @@ class WishlistController extends Controller
         
         $productId = $product instanceof Product ? $product->id : $product;
         
-        $this->wishlistService->addProduct($request->user(), $productId);
+        $this->wishlistService->addProduct( $productId);
         return response()->json(['message' => 'Product added to wishlist'], 201);
     }
 
     public function destroy(Request $request, $product)
     {
         $productId = $product instanceof Product ? $product->id : $product;
-        $this->wishlistService->removeProduct($request->user(), $productId);
+        $this->wishlistService->removeProduct($productId);
         return response()->json(['message' => 'Product removed from wishlist']);
     }
 }
