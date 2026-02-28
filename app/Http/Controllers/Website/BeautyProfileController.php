@@ -19,6 +19,13 @@ class BeautyProfileController extends Controller
 
     public function store(StoreBeautyProfileRequest $request)
     {
-        $profile = $this->beautyProfileService->storeProfile($request->user(), $request->validated());
+        $profile = $this->beautyProfileService->storeProfile($request->validated());
         return new BeautyProfileResource($profile);
-    }}
+    }
+    
+    public function show()
+    {
+        $profile = $this->beautyProfileService->getProfile();
+        return new BeautyProfileResource($profile);
+    }
+}

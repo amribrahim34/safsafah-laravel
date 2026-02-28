@@ -31,6 +31,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('orders/paginated', [OrderController::class, 'index']);
 
     Route::post('beauty-profile', [BeautyProfileController::class, 'store']);
+    Route::get('beauty-profile', [BeautyProfileController::class, 'show']);
     Route::get('beauty-questionnaire', [BeautyQuestionnaireController::class, 'index']);
 
     Route::get('wishlist', [WishlistController::class, 'index']);
