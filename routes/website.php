@@ -9,6 +9,7 @@ use App\Http\Controllers\Website\HomeController;
 use App\Http\Controllers\Website\OrderController;
 use App\Http\Controllers\Website\ProductController;
 use App\Http\Controllers\Website\ProfileController;
+use App\Http\Controllers\Website\ReviewController;
 use App\Http\Controllers\Website\WishlistController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,8 +20,12 @@ Route::group(['prefix' => 'auth'], function () {
 
 Route::get('products', [ProductController::class, 'index']);
 Route::get('products/{product}', [ProductController::class, 'show']);
+Route::get('products/{product}/reviews', [ReviewController::class, 'getProductReviews']);
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
+
+    Route::post('reviews', [ReviewController::class, 'storeReview']);
+
     Route::get('cart', [CartController::class, 'index']);
     Route::post('cart/items', [CartController::class, 'store']);
     Route::put('cart/items/{cartItem}', [CartController::class, 'update']);
