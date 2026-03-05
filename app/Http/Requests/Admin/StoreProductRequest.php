@@ -30,7 +30,7 @@ class StoreProductRequest extends FormRequest
             'sku' => 'nullable|string|max:255|unique:products',
             'category_id' => 'required|exists:categories,id',
             'brand_id' => 'required|exists:brands,id',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'active_ingredients' => 'nullable|array',
             'active_ingredients.*' => 'exists:active_ingredients,id',
             'skin_types' => 'nullable|array',
