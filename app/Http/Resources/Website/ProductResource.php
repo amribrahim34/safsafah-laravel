@@ -32,6 +32,7 @@ class ProductResource extends JsonResource
             'sku' => $this->sku,
             'rating' => round($this->rating ?? 0, 1),
             'isInWishlist' => $this->is_in_wishlist,
+            "isRecommended" => $this->is_recommended ?? false,
             'ratingCount' => $this->rating_count,
         ];
     }

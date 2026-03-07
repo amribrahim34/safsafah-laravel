@@ -11,7 +11,7 @@ class ProductService
      */
     public function getProducts(array $filters = [])
     {
-        $query = Product::query();
+        $query = Product::query()->with(['skinTypes', 'activeIngredients']);
 
         if (isset($filters['categoryIds'])) {
             $query->whereIn('category_id', $filters['categoryIds']);
@@ -59,9 +59,10 @@ class ProductService
 
     public function getProduct($selector)
     {
-        return Product::where('slug_ar', $selector)
-        ->orWhere('slug_en', $selector)
-        ->orWhere('id', $selector)
-        ->firstOrFail();
+        return Product::with(['skinTypes', 'activeIngredients'])
+            ->where('slug_ar', $selector)
+            ->orWhere('slug_en', $selector)
+            ->orWhere('id', $selector)
+            ->firstOrFail();
     }
 }

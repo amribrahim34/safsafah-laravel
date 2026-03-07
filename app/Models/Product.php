@@ -89,4 +89,44 @@ class Product extends Model
     {
         return $this->wishLists()->where('user_id', auth('sanctum')->id())->exists();
     }
+
+    public function getIsRecommendedAttribute(): ?bool
+    {
+        $user = auth('sanctum')->user();
+
+        if (! $user) {
+            return false;
+        }
+
+        // Load the beauty profile and its ingredient relations once per request.
+        // Eloquent caches the results on the model instance, so subsequent calls
+        // for the same user are resolved in-memory without additional queries.
+        $user->loadMissing([
+            'beautyProfile.preferredIngredients',
+            'beautyProfile.avoidedIngredients',
+        ]);
+
+        $beautyProfile = $user->beautyProfile;
+
+        if (! $beautyProfile) {
+            return false;
+        }
+
+        $productSkinTypeIds     = $this->skinTypes->pluck('id');
+        $productIngredientIds   = $this->activeIngredients->pluck('id');
+
+        $preferredIngredientIds = $beautyProfile->preferredIngredients->pluck('id');
+        $avoidedIngredientIds   = $beautyProfile->avoidedIngredients->pluck('id');
+
+        // Disqualify immediately if the product contains any avoided ingredient.
+        if ($productIngredientIds->intersect($avoidedIngredientIds)->isNotEmpty()) {
+            return false;
+        }
+
+        // Recommend when the product matches the user's skin type OR a preferred ingredient.
+        $matchesSkinType    = $productSkinTypeIds->contains($beautyProfile->skin_type_id);
+        $matchesIngredient  = $productIngredientIds->intersect($preferredIngredientIds)->isNotEmpty();
+
+        return $matchesSkinType || $matchesIngredient;
+    }
 }
