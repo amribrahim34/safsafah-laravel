@@ -59,7 +59,7 @@ class ProductService
 
     public function getProduct($selector)
     {
-        return Product::with(['skinTypes', 'activeIngredients'])
+        return Product::with(['skinTypes', 'activeIngredients', 'skinConcerns'])
             ->where('slug_ar', $selector)
             ->orWhere('slug_en', $selector)
             ->orWhere('id', $selector)

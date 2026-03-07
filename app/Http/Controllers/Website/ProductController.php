@@ -27,4 +27,5 @@ class ProductController extends Controller
     {
          $product = $this->productService->getProduct($selector);
          return new ProductResource($product);
-    }}
+    }
+}
