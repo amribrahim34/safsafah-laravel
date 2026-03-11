@@ -921,7 +921,7 @@ class ProductSeeder extends Seeder
 
         // Create products with relationships
         foreach ($products as $productData) {
-            $product = Product::factory()->create([
+            $product = Product::create([
                 'name_ar' => $productData['name_ar'],
                 'name_en' => $productData['name_en'],
                 'slug_ar' => arabic_slug($productData['name_ar']),
