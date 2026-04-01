@@ -2,6 +2,7 @@
 
 namespace App\Services\Website;
 
+use App\Enums\OrderStatusEnum;
 use App\Models\Address;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -42,7 +43,7 @@ class OrderService
                 'tax' => 0,
                 'shipping' => 0,
                 'discount' => 0,
-                'status' => 'PENDING',
+                'status' => OrderStatusEnum::PENDING->value,
                 'address_id' => $address->id,
             ]);
 

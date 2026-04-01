@@ -9,6 +9,7 @@ class OrderService
     public function getAllOrdersPagenated($search = null, $status = null)
     {
         return Order::query()
+            ->with(['user', 'items.product', 'address', 'promoCode', 'payment'])
             ->search($search)
             ->when($status, function ($q) use ($status) {
                 $q->where('status', $status);
