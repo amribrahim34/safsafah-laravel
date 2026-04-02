@@ -2,6 +2,7 @@
 
 namespace App\Services\Admin;
 
+use App\Events\OrderStatusChanged;
 use App\Models\Order;
 
 class OrderService
@@ -26,7 +27,9 @@ class OrderService
     public function updateOrderStatus($id, $status)
     {
         $order = Order::findOrFail($id);
+        $oldStatus = $order->status;
         $order->update(['status' => $status]);
+        OrderStatusChanged::dispatch($order, $oldStatus, $status);
         return $order;
     }
 }

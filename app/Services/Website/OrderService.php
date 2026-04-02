@@ -3,6 +3,7 @@
 namespace App\Services\Website;
 
 use App\Enums\OrderStatusEnum;
+use App\Events\OrderCreated;
 use App\Models\Address;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -80,7 +81,11 @@ class OrderService
             // 7. Empty Cart
             $cart->items()->delete();
 
-            return $order->load(['items.product', 'address', 'payment']);
+            $order = $order->load(['items.product', 'address', 'payment']);
+
+            OrderCreated::dispatch($order);
+
+            return $order;
         });
     }
 
