@@ -34,7 +34,10 @@ class HomeService
 
     public function getBrands()
     {
-        return Brand::take(8)->get();
+        return Brand::whereHas('products')
+        ->withCount('products')
+        ->orderBy('products_count', 'desc')
+        ->take(8)->get();
     }
 
     public function getBestSellers()
