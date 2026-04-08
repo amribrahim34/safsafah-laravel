@@ -25,9 +25,9 @@ class UpdateSettingRequest extends FormRequest
             'facebook'  => 'nullable|url|max:255',
             'instagram' => 'nullable|url|max:255',
             'tiktok'    => 'nullable|url|max:255',
-            'whatsapp'  => 'nullable|string|max:255',
+            'whatsapp'  => ['nullable', 'string', 'regex:/^(010|011|012|015)\d{8}$/'],
             'email'     => 'nullable|email|max:255',
-            'mobile'    => 'nullable|string|max:50',
+            'mobile'    => ['nullable', 'string', 'regex:/^(010|011|012|015)\d{8}$/'],
         ];
     }
 }
