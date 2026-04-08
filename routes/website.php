@@ -10,6 +10,7 @@ use App\Http\Controllers\Website\OrderController;
 use App\Http\Controllers\Website\ProductController;
 use App\Http\Controllers\Website\ProfileController;
 use App\Http\Controllers\Website\ReviewController;
+use App\Http\Controllers\Website\SettingController;
 use App\Http\Controllers\Website\WishlistController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,6 +18,8 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('login', [AuthController::class, 'login']);
     Route::post('register', [AuthController::class, 'register']);
 });
+
+Route::get('settings', [SettingController::class, 'show']);
 
 Route::get('products', [ProductController::class, 'index']);
 Route::get('products/{product}', [ProductController::class, 'show']);
