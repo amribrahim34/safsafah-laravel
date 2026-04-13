@@ -22,7 +22,7 @@ class ProductService
             ->when($brand_id, fn($q) => $q->where('brand_id', $brand_id))
             ->with(['category', 'brand' , 'activeIngredients' , 'skinTypes' , 'skinConcerns'])
             ->latest()
-            ->paginate(10);
+            ->paginate(30);
     }
 
     public function getProductById($id)
