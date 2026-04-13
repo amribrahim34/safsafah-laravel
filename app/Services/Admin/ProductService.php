@@ -4,6 +4,7 @@ namespace App\Services\Admin;
 
 use App\Models\Product;
 use App\Services\FileUploadService;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -50,6 +51,7 @@ class ProductService
         $product = Product::findOrFail($id);
 
         if (isset($data['image'])) {
+            Log::info('Updating product image for product ID: ' . $id,['method' => __METHOD__]);
             $data['image'] = $this->fileUploadService->updateImage($product->image, $data['image'], 'products' , $data['name_en']);
         }
 

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -28,17 +29,21 @@ class FileUploadService
 
     public function updateImage($oldPath, $newFile, $folder, $name = null)
     {
-        if ($oldPath && Storage::disk('public')->exists($oldPath)) {
-            Storage::disk('public')->delete($oldPath);
+        try {
+            if ($oldPath && Storage::disk('public')->exists($oldPath)) {
+                Storage::disk('public')->delete($oldPath);
+            }
+            if ($name) {
+                $fileName = $this->sanitizeFileName($name . rand(1,9) . '.' . $newFile->getClientOriginalExtension());
+            } else {
+                $fileName = $this->sanitizeFileName($newFile->getClientOriginalName());
+            }
+            return Storage::disk('public')->putFileAs($folder, $newFile, $fileName);
+        } catch (\Throwable $th) {
+            //throw $th;
+            Log::error('Error updating image: ' . $th->getMessage(), ['method' => __METHOD__]);
+            return $oldPath; // Return old path if update fails
         }
-
-        if ($name) {
-            $fileName = $this->sanitizeFileName($name . '.' . $newFile->getClientOriginalExtension());
-        } else {
-            $fileName = $this->sanitizeFileName($newFile->getClientOriginalName());
-        }
-
-        return Storage::disk('public')->putFileAs($folder, $newFile, $fileName);
     }
 
     public function uploadMultiple($files, $folder, $name = null)
