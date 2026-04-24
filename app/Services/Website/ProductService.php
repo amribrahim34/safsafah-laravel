@@ -14,7 +14,7 @@ class ProductService
         $query = Product::query()->with(['skinTypes', 'activeIngredients']);
 
         if (isset($filters['categoryIds'])) {
-            $query->whereIn('category_id', $filters['categoryIds']);
+            $query->whereHas('categories', fn($q) => $q->whereIn('categories.id', $filters['categoryIds']));
         }
 
         if (isset($filters['brandIds'])) {

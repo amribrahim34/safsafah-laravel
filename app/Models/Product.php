@@ -15,16 +15,15 @@ class Product extends Model
         'description_en',
         'slug_ar',
         'slug_en',
-        'category_id',
         'brand_id',
         'price',
         'image',
         'sku',
     ];
 
-    public function category()
+    public function categories()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsToMany(Category::class);
     }
 
     public function brand()

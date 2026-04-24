@@ -926,10 +926,13 @@ class ProductSeeder extends Seeder
                 'name_en' => $productData['name_en'],
                 'slug_ar' => arabic_slug($productData['name_ar']),
                 'slug_en' => Str::slug($productData['name_en']),
-                'category_id' => $productData['category_id'],
                 'brand_id' => $productData['brand_id'],
                 'price' => $productData['price'],
             ]);
+
+            if (!empty($productData['category_id'])) {
+                $product->categories()->attach($productData['category_id']);
+            }
 
             // Attach relationships
             if (!empty($productData['skin_types'])) {

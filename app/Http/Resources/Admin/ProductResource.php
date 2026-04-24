@@ -24,8 +24,7 @@ class ProductResource extends JsonResource
             'description_en' => $this->description_en,
             'price' => $this->price,
             'sku' => $this->sku,
-            'category_id' => $this->category_id,
-            'category' => new CategoryResource($this->whenLoaded('category')), // Assuming CategoryResource exists
+            'categories' => CategoryResource::collection($this->whenLoaded('categories')),
             'brand_id' => $this->brand_id,
             'brand' => $this->whenLoaded('brand'), // Or BrandResource if exists
             'image_url' => $this->image_url, // Using the accessor for image URL

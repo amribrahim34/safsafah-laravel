@@ -18,16 +18,16 @@ class ProductService
     {
         return Product::query()
             ->search($search)
-            ->when($category_id, fn($q) => $q->where('category_id', $category_id))
+            ->when($category_id, fn($q) => $q->whereHas('categories', fn($q) => $q->where('categories.id', $category_id)))
             ->when($brand_id, fn($q) => $q->where('brand_id', $brand_id))
-            ->with(['category', 'brand' , 'activeIngredients' , 'skinTypes' , 'skinConcerns'])
+            ->with(['categories', 'brand', 'activeIngredients', 'skinTypes', 'skinConcerns'])
             ->latest()
             ->paginate(30);
     }
 
     public function getProductById($id)
     {
-        return Product::with(['category', 'brand' , 'activeIngredients' , 'skinTypes' , 'skinConcerns'])->findOrFail($id);
+        return Product::with(['categories', 'brand', 'activeIngredients', 'skinTypes', 'skinConcerns'])->findOrFail($id);
     }
 
     public function createProduct($data)
@@ -76,6 +76,9 @@ class ProductService
 
     private function syncRelations(Product $product, array $data)
     {
+        if (isset($data['category_ids'])) {
+            $product->categories()->sync($data['category_ids']);
+        }
         if (isset($data['active_ingredients'])) {
             $product->activeIngredients()->sync($data['active_ingredients']);
         }
