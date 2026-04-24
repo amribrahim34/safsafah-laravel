@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\PromoCodeController;
 use App\Http\Controllers\Admin\SkinConcernController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\SkinTypesController;
+use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'admin'], function () {
@@ -39,6 +40,11 @@ Route::group(['prefix' => 'admin'], function () {
         Route::apiResource('skin-concerns', SkinConcernController::class);
         Route::apiResource('beauty-profiles', BeautyProfileController::class);
         Route::apiResource('orders', OrderController::class);
+
+        // User management
+        Route::get('users/export', [UserController::class, 'export']);           // must be before {user}
+        Route::get('users/{user}/favorites', [UserController::class, 'favorites']);
+        Route::apiResource('users', UserController::class)->only(['index', 'show']);
 
         // Settings (singleton resource)
         Route::get('settings', [SettingController::class, 'show']);

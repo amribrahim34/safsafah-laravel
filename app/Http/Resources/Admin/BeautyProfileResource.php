@@ -14,6 +14,13 @@ class BeautyProfileResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id'                    => $this->id,
+            'skin_type'             => new SkinTypesResource($this->whenLoaded('skinType')),
+            'allergies'             => $this->allergies,
+            'skin_concerns'         => SkinConcernResource::collection($this->whenLoaded('skinConcerns')),
+            'preferred_ingredients' => ActiveIngrediantResource::collection($this->whenLoaded('preferredIngredients')),
+            'avoided_ingredients'   => ActiveIngrediantResource::collection($this->whenLoaded('avoidedIngredients')),
+        ];
     }
 }

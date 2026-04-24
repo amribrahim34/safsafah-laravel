@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -97,5 +98,45 @@ class User extends Authenticatable
     public function pointsTransactions()
     {
         return $this->hasMany(PointsTransaction::class);
+    }
+
+    // ─── Scopes ────────────────────────────────────────────────────────────────
+
+    /**
+     * Filter by name, email, or mobile (case-insensitive LIKE search).
+     */
+    public function scopeSearch(Builder $query, ?string $search): Builder
+    {
+        return $query->when($search, function (Builder $q) use ($search): void {
+            $q->where(function (Builder $inner) use ($search): void {
+                $inner->where('name', 'like', "%{$search}%")
+                      ->orWhere('email', 'like', "%{$search}%")
+                      ->orWhere('mobile', 'like', "%{$search}%");
+            });
+        });
+    }
+
+    /**
+     * Only users who have placed at least one order.
+     */
+    public function scopeHasOrders(Builder $query): Builder
+    {
+        return $query->has('orders');
+    }
+
+    /**
+     * Only users who have never placed an order.
+     */
+    public function scopeNoOrders(Builder $query): Builder
+    {
+        return $query->doesntHave('orders');
+    }
+
+    /**
+     * Only users who have a beauty profile.
+     */
+    public function scopeHasBeautyProfile(Builder $query): Builder
+    {
+        return $query->has('beautyProfile');
     }
 }
