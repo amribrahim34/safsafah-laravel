@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\BeautyProfileController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ContactMessageController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\PromoCodeController;
@@ -22,6 +23,14 @@ Route::group(['prefix' => 'admin'], function () {
     Route::middleware(['auth:sanctum', 'is_admin'])->group(function () {
         Route::post('logout', [AuthController::class, 'logout']);
         Route::get('me', [AuthController::class, 'me']);
+
+        // Dashboard (split endpoints for parallel loading)
+        Route::prefix('dashboard')->group(function () {
+            Route::get('stats',         [DashboardController::class, 'stats']);
+            Route::get('orders-status', [DashboardController::class, 'ordersStatus']);
+            Route::get('revenue-chart', [DashboardController::class, 'revenueChart']);
+            Route::get('top-products',  [DashboardController::class, 'topProducts']);
+        });
 
         // Select endpoints (must be before apiResource)
         Route::get('brands/select', [BrandController::class, 'select']);
