@@ -18,15 +18,10 @@ class WishlistService
      */
     public function getWishlist()
     {
-        return Wishlist::select(
-            'products.id', 
-            'products.name_ar', 
-            'products.name_en', 
-            'products.price', 
-            'products.image'
-            )
-            ->join('products', 'wish_lists.product_id', '=', 'products.id')
-            ->where('wish_lists.user_id', $this->user->id)
+        $productIds = WishList::where('user_id', $this->user->id)->pluck('product_id');
+
+        return Product::with(['categories', 'brand', 'activeIngredients', 'skinTypes', 'skinConcerns'])
+            ->whereIn('id', $productIds)
             ->get();
     }
 
