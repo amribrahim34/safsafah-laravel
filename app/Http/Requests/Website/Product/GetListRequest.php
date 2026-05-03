@@ -37,6 +37,7 @@ class GetListRequest extends FormRequest
             'searchQuery' => 'nullable|string|max:255',
             'page' => 'nullable|integer|min:1',
             'limit' => 'nullable|integer|min:1|max:100',
+            'recommended' => 'nullable|boolean',
         ];
     }
 

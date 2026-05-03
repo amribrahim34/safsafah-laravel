@@ -51,10 +51,54 @@ class ProductService
             $query->search($filters['searchQuery']);
         }
 
+        if (!empty($filters['recommended'])) {
+            $this->applyRecommendedFilter($query);
+        }
+
         $perPage = $filters['limit'] ?? 12;
 
         $data = $query->paginate($perPage);
         return $data;
+    }
+
+    private function applyRecommendedFilter($query): void
+    {
+        $user = auth('sanctum')->user();
+
+        if (!$user) {
+            return;
+        }
+
+        $user->loadMissing([
+            'beautyProfile.preferredIngredients',
+            'beautyProfile.avoidedIngredients',
+        ]);
+
+        $beautyProfile = $user->beautyProfile;
+
+        if (!$beautyProfile) {
+            return;
+        }
+
+        $preferredIngredientIds = $beautyProfile->preferredIngredients->pluck('id')->toArray();
+        $avoidedIngredientIds   = $beautyProfile->avoidedIngredients->pluck('id')->toArray();
+
+        if (!empty($avoidedIngredientIds)) {
+            $query->whereDoesntHave('activeIngredients', fn($q) =>
+                $q->whereIn('active_ingredients.id', $avoidedIngredientIds)
+            );
+        }
+
+        $query->where(function ($q) use ($beautyProfile, $preferredIngredientIds) {
+            $q->whereHas('skinTypes', fn($sq) =>
+                $sq->where('skin_types.id', $beautyProfile->skin_type_id)
+            );
+            if (!empty($preferredIngredientIds)) {
+                $q->orWhereHas('activeIngredients', fn($sq) =>
+                    $sq->whereIn('active_ingredients.id', $preferredIngredientIds)
+                );
+            }
+        });
     }
 
     public function getProduct($selector)
