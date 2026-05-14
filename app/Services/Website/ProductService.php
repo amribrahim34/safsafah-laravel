@@ -48,7 +48,8 @@ class ProductService
         }
 
         if (isset($filters['searchQuery'])) {
-            $query->search($filters['searchQuery']);
+            $ids = Product::search($filters['searchQuery'])->keys();
+            $query->whereIn('id', $ids);
         }
 
         if (!empty($filters['recommended'])) {

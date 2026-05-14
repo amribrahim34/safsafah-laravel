@@ -24,6 +24,66 @@ class Product extends Model
         'sku',
     ];
 
+    public function searchableAs(): string
+    {
+        return 'products';
+    }
+
+    public function toSearchableArray(): array
+    {
+        $this->loadMissing(['brand', 'categories', 'skinTypes', 'skinConcerns', 'activeIngredients']);
+
+        return [
+            'name_ar'            => $this->name_ar,
+            'name_en'            => $this->name_en,
+            // 'description_ar'     => $this->description_ar,
+            // 'description_en'     => $this->description_en,
+            'sku'                => $this->sku,
+            'price'              => (float) $this->price,
+            // 'slug_ar'            => $this->slug_ar,
+            // 'slug_en'            => $this->slug_en,
+            // 'image_url'          => $this->image_url,
+            'brand'           => $this->brand ? [
+                'id' => $this->brand->id,
+                'name_ar' => $this->brand->name_ar,
+                'name_en' => $this->brand->name_en,
+            ] : null,
+            "categories" => $this->categories->map(function ($category) {
+                return [
+                    'id' => $category->id,
+                    'name_ar' => $category->name_ar,
+                    'name_en' => $category->name_en,
+                ];
+            })->values()->all(),
+            "skin_types" => $this->skinTypes->map(function ($skinType) {
+                return [
+                    'id' => $skinType->id,
+                    'name_ar' => $skinType->name_ar,
+                    'name_en' => $skinType->name_en,
+                ];
+            })->values()->all(),
+            "skin_concerns" => $this->skinConcerns->map(function ($skinConcern) {
+                return [
+                    'id' => $skinConcern->id,
+                    'name_ar' => $skinConcern->name_ar,
+                    'name_en' => $skinConcern->name_en,
+                ];
+            })->values()->all(),
+            "active_ingredients" => $this->activeIngredients->map(function ($ingredient) {
+                return [
+                    'id' => $ingredient->id,
+                    'name_ar' => $ingredient->name_ar,
+                    'name_en' => $ingredient->name_en,
+                ];
+            })->values()->all(),
+        ];
+    }
+
+    public function makeAllSearchableUsing($query)
+    {
+        return $query->with(['brand', 'categories', 'skinTypes', 'skinConcerns', 'activeIngredients']);
+    }
+
     public function categories()
     {
         return $this->belongsToMany(Category::class);
