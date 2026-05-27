@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\ActiveIngrediantController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\BeautyProfileController;
+use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ContactMessageController;
@@ -39,6 +40,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('skin-concerns/select', [SkinConcernController::class, 'select']);
         Route::get('active-ingredients/select', [ActiveIngrediantController::class, 'select']);
 
+        Route::apiResource('blogs', BlogController::class);
         Route::apiResource('active-ingredients', ActiveIngrediantController::class);
         Route::apiResource('categories', CategoryController::class);
         Route::apiResource('promo-codes', PromoCodeController::class);

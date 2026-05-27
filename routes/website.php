@@ -3,6 +3,7 @@
 use App\Http\Controllers\Website\AuthController;
 use App\Http\Controllers\Website\BeautyProfileController;
 use App\Http\Controllers\Website\BeautyQuestionnaireController;
+use App\Http\Controllers\Website\BlogController;
 use App\Http\Controllers\Website\CartController;
 use App\Http\Controllers\Website\FiltersController;
 use App\Http\Controllers\Website\HomeController;
@@ -20,6 +21,9 @@ Route::group(['prefix' => 'auth'], function () {
 });
 
 Route::get('settings', [SettingController::class, 'show']);
+
+Route::get('blogs', [BlogController::class, 'index']);
+Route::get('blogs/{slug}', [BlogController::class, 'show']);
 
 Route::get('products', [ProductController::class, 'index']);
 Route::get('products/{product}', [ProductController::class, 'show']);
