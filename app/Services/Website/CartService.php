@@ -3,29 +3,29 @@
 namespace App\Services\Website;
 
 use App\Models\Cart;
+use App\Models\PromoCode;
+use App\Services\Website\Orders\OrderCalculationService;
 
 class CartService
 {
-    /**
-     * Create a new class instance.
-     */
-    public function getCart($user)
+    public function __construct(private OrderCalculationService $calculationService)
     {
-        // Get or create cart
+    }
+
+    public function getCart($user): Cart
+    {
         return Cart::firstOrCreate(
             ['user_id' => $user->id],
-            // Default attributes if creating
-            ['promo_code_id' => null] 
+            ['promo_code_id' => null]
         )->load(['items.product', 'promoCode']);
     }
 
-    public function addItem($user, array $data)
+    public function addItem($user, array $data): Cart
     {
         $cart = $this->getCart($user);
         $productId = $data['productId'];
         $quantity = $data['quantity'] ?? 1;
 
-        // Check if item exists
         $cartItem = $cart->items()->where('product_id', $productId)->first();
 
         if ($cartItem) {
@@ -41,7 +41,7 @@ class CartService
         return $cart->load(['items.product', 'promoCode']);
     }
 
-    public function updateItem($user, $cartItemId, array $data)
+    public function updateItem($user, $cartItemId, array $data): Cart
     {
         $cart = $this->getCart($user);
         $cartItem = $cart->items()->where('id', $cartItemId)->firstOrFail();
@@ -52,18 +52,25 @@ class CartService
         return $cart->load(['items.product', 'promoCode']);
     }
 
-    public function removeItem($user, $cartItemId)
+    public function removeItem($user, $cartItemId): Cart
     {
         $cart = $this->getCart($user);
         $cart->items()->where('id', $cartItemId)->delete();
-        
+
         return $cart->load(['items.product', 'promoCode']);
     }
 
-    public function applyPromo($user, $code)
+    public function applyPromo($user, string $code): Cart
     {
-        // Mock logic for promo code
-        // In real app, validating code against DB
-        return $this->getCart($user);
+        $cart = $this->getCart($user);
+        $promoCode = PromoCode::where('code', $code)->firstOrFail();
+
+        $subtotal = $this->calculationService->calculateSubtotal($cart->items);
+        $this->calculationService->validatePromoCode($promoCode, $subtotal);
+
+        $cart->promo_code_id = $promoCode->id;
+        $cart->save();
+
+        return $cart->load(['items.product', 'promoCode']);
     }
 }
