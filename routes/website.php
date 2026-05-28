@@ -29,6 +29,8 @@ Route::get('products', [ProductController::class, 'index']);
 Route::get('products/{product}', [ProductController::class, 'show']);
 Route::get('products/{product}/reviews', [ReviewController::class, 'getProductReviews']);
 
+Route::post('orders/guest', [OrderController::class, 'guestOrder']);
+
 Route::group(['middleware' => 'auth:sanctum'], function () {
 
     Route::post('reviews', [ReviewController::class, 'storeReview']);
@@ -41,6 +43,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
     Route::post('orders', [OrderController::class, 'store']);
     Route::get('orders/paginated', [OrderController::class, 'index']);
+    Route::get('orders/{id}', [OrderController::class, 'show']);
+    Route::post('orders/{id}/cancel', [OrderController::class, 'cancel']);
 
     Route::post('beauty-profile', [BeautyProfileController::class, 'store']);
     Route::get('beauty-profile', [BeautyProfileController::class, 'show']);

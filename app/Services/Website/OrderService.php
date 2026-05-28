@@ -11,6 +11,7 @@ use App\Models\Payment;
 use App\Services\Website\Orders\OrderCalculationService;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use RuntimeException;
 
 class OrderService
 {
@@ -25,7 +26,7 @@ class OrderService
             $cart = $user->cart()->with('items.product', 'promoCode')->first();
 
             if (!$cart || $cart->items->isEmpty()) {
-                throw new Exception("Cart is empty");
+                throw new Exception(__('messages.cart_is_empty'));
             }
 
             // 2. Calculate totals (validates promo code if present)
@@ -90,6 +91,31 @@ class OrderService
 
             return $order;
         });
+    }
+
+    public function getOrderById(int $id, int $userId): Order
+    {
+        $order = Order::where('id', $id)
+            ->where('user_id', $userId)
+            ->with(['items.product', 'payment', 'address'])
+            ->first();
+
+        if (!$order) {
+            throw new Exception(__('messages.order_not_found'));
+        }
+
+        return $order;
+    }
+
+    public function cancelOrder(int $id, int $userId): void
+    {
+        $order = $this->getOrderById($id, $userId);
+
+        if ($order->status !== OrderStatusEnum::PENDING->value) {
+            throw new RuntimeException(__('messages.order_cannot_be_canceled'));
+        }
+
+        $order->update(['status' => OrderStatusEnum::CANCELED->value]);
     }
 
     public function getOrders($user, $perPage = 10)

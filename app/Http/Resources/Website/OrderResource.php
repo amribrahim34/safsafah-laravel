@@ -20,7 +20,7 @@ class OrderResource extends JsonResource
             'total' => $this->total,
             'subtotal' => $this->subtotal,
             'tax' => $this->tax,
-            'shipping' => $this->shipping_cost,
+            'shipping' => $this->shipping,
             'discount' => $this->discount,
             'status' => $this->status,
             'createdAt' => $this->created_at,
