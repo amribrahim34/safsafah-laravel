@@ -91,7 +91,9 @@ class GuestOrderService
 
             OrderCreated::dispatch($order);
 
-            return ['user' => $user, 'order' => $order];
+            $token = $user->createToken('guest_token')->plainTextToken;
+
+            return ['user' => $user, 'order' => $order, 'token' => $token];
         });
     }
 }

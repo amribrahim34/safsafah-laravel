@@ -65,6 +65,7 @@ class OrderController extends Controller
             return response()->json([
                 'user'  => new UserResource($result['user']),
                 'order' => new OrderResource($result['order']),
+                'token' => $result['token'],
             ], 201);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 400);
