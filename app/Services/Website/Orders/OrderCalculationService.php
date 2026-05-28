@@ -8,6 +8,8 @@ use Illuminate\Support\Collection;
 
 class OrderCalculationService
 {
+    private const SHIPPING_COST = 50;
+    
     public function calculateSubtotal(Collection $items): float
     {
         return $items->sum(fn($item) => $item->product->price * $item->quantity);
@@ -58,7 +60,7 @@ class OrderCalculationService
         }
 
         $tax = 0;
-        $shipping = 0;
+        $shipping = self::SHIPPING_COST;
         $total = max(0, $subtotal - $discount + $tax + $shipping);
 
         return compact('subtotal', 'discount', 'tax', 'shipping', 'total');
