@@ -27,6 +27,7 @@ class GuestOrderService
                 ['mobile' => $data['customerMobile']],
                 [
                     'name'     => $data['customerName'],
+                    'email'    => $data['customerMobile'] . '@guest.safsafah.com',
                     'password' => Hash::make('safsafah123'),
                 ]
             );
