@@ -13,6 +13,12 @@ class BlogCategoryController extends Controller
 {
     public function __construct(private BlogCategoryService $blogCategoryService) {}
 
+    public function select()
+    {
+        $categories = $this->blogCategoryService->getForSelect();
+        return BlogCategoryResource::collection($categories);
+    }
+
     public function index(Request $request)
     {
         $categories = $this->blogCategoryService->getAllPaginated($request->search);

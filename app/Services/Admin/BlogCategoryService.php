@@ -6,6 +6,11 @@ use App\Models\BlogCategory;
 
 class BlogCategoryService
 {
+    public function getForSelect()
+    {
+        return BlogCategory::query()->latest()->get();
+    }
+
     public function getAllPaginated($search = null)
     {
         return BlogCategory::query()

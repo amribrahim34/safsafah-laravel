@@ -42,6 +42,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('active-ingredients/select', [ActiveIngrediantController::class, 'select']);
 
         Route::apiResource('blogs', BlogController::class);
+        Route::get('blog-categories/select', [BlogCategoryController::class, 'select']);
         Route::apiResource('blog-categories', BlogCategoryController::class);
         Route::apiResource('active-ingredients', ActiveIngrediantController::class);
         Route::apiResource('categories', CategoryController::class);
