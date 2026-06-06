@@ -4,7 +4,6 @@ namespace App\Http\Resources\Website;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Str;
 
 class ProductResource extends JsonResource
 {
@@ -30,6 +29,10 @@ class ProductResource extends JsonResource
             'skinConcerns'=> SkinConcernResource::collection($this->skinConcerns),
             'brandId' => $this->brand_id,
             'price' => $this->price,
+            'originalPrice' => $this->price,
+            'discount' => $this->discount,
+            'discountPercentage' => $this->discount_percentage,
+            'finalPrice' => $this->final_price,
             'image' => $this->image_url,
             'sku' => $this->sku,
             'rating' => round($this->rating ?? 0, 1),

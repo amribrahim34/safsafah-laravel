@@ -38,6 +38,9 @@ class UpdateProductRequest extends FormRequest
             'skin_types.*' => 'exists:skin_types,id',
             'skin_concerns' => 'nullable|array',
             'skin_concerns.*' => 'exists:skin_concerns,id',
+            'discount' => 'nullable|numeric|min:0',
+            'discount_starts_at' => 'nullable|date|required_with:discount',
+            'discount_ends_at' => 'nullable|date|after:discount_starts_at|required_with:discount',
         ];
     }
 }

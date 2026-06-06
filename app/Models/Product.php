@@ -22,6 +22,14 @@ class Product extends Model
         'price',
         'image',
         'sku',
+        'discount',
+        'discount_starts_at',
+        'discount_ends_at',
+    ];
+
+    protected $casts = [
+        'discount_starts_at' => 'datetime',
+        'discount_ends_at'   => 'datetime',
     ];
 
     public function searchableAs(): string
@@ -135,6 +143,28 @@ class Product extends Model
     public function getImageUrlAttribute()
     {
         return $this->image ? asset('storage/' . $this->image) : null;
+    }
+
+    public function getFinalPriceAttribute(): float
+    {
+        if ($this->discount && $this->discount_starts_at && $this->discount_ends_at) {
+            if (now()->between($this->discount_starts_at, $this->discount_ends_at)) {
+                return (float) ($this->price - $this->discount);
+            }
+        }
+
+        return (float) $this->price;
+    }
+
+    public function getDiscountPercentageAttribute(): ?float
+    {
+        if ($this->discount && $this->price > 0 && $this->discount_starts_at && $this->discount_ends_at) {
+            if (now()->between($this->discount_starts_at, $this->discount_ends_at)) {
+                return round(($this->discount / $this->price) * 100, 1);
+            }
+        }
+
+        return null;
     }
 
     public function getRatingAttribute()
