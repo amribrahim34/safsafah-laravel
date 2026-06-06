@@ -13,7 +13,12 @@ class BlogController extends Controller
 
     public function index(Request $request)
     {
-        $blogs = $this->blogService->getAllBlogsPaginated($request->search);
+        $blogs = $this->blogService->getAllBlogsPaginated(
+            $request->search,
+            $request->category_id,
+            $request->category,
+            $request->limit ?? 15
+        );
         return BlogResource::collection($blogs);
     }
 
