@@ -38,6 +38,7 @@ class GetListRequest extends FormRequest
             'page' => 'nullable|integer|min:1',
             'limit' => 'nullable|integer|min:1|max:100',
             'recommended' => 'nullable|boolean',
+            'sale' => 'nullable|boolean',
         ];
     }
 

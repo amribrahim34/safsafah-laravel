@@ -127,6 +127,15 @@ class Product extends Model
         return $this->hasMany(WishList::class);
     }
 
+    public function scopeOnSale($query)
+    {
+        return $query->whereNotNull('discount')
+                     ->whereNotNull('discount_starts_at')
+                     ->whereNotNull('discount_ends_at')
+                     ->whereDate('discount_starts_at', '<=', now())
+                     ->whereDate('discount_ends_at', '>=', now());
+    }
+
     public function scopeSearch($query, $search)
     {
         return $query->when($search, function ($q) use ($search) {

@@ -56,6 +56,10 @@ class ProductService
             $this->applyRecommendedFilter($query);
         }
 
+        if (!empty($filters['sale'])) {
+            $query->onSale();
+        }
+
         $perPage = $filters['limit'] ?? 12;
 
         $data = $query->paginate($perPage);
