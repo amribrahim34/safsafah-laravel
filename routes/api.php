@@ -8,3 +8,6 @@ require __DIR__.'/website.php';
 
 // Admin routes
 require __DIR__.'/admin.php';
+
+// Mobile application routes
+require __DIR__.'/app.php';
