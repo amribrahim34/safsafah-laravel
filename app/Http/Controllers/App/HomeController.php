@@ -21,7 +21,18 @@ class HomeController extends Controller
     public function index()
     {
         $data = $this->homeService->getHomeData();
-        return response()->json(['data' => $data]);
+
+        // Wrap raw models in API resources so the /home payload exposes the
+        // same camelCase contract as the dedicated home endpoints.
+        return response()->json([
+            'data' => [
+                'sliders'          => $data['sliders'],
+                'categories'       => CategoryResource::collection($data['categories']),
+                'brands'           => BrandResource::collection($data['brands']),
+                'featuredProducts' => ProductResource::collection($data['featuredProducts']),
+                'newArrivals'      => ProductResource::collection($data['newArrivals']),
+            ],
+        ]);
     }
 
     public function newArrivals()
